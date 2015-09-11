@@ -1,0 +1,38 @@
+.hwt-wrapper {
+	display: inline-block;
+	position: relative;
+	overflow: hidden;
+	-webkit-text-size-adjust: none;
+}
+
+.hwt-backdrop {
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	right: -20px;
+	bottom: 0;
+	left: 0;
+	padding-right: 20px;
+	overflow: auto;
+}
+
+.hwt-content {
+	box-sizing: border-box;
+	min-height: 100%;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+	color: transparent;
+}
+
+.hwt-content mark {
+	color: inherit;
+}
+
+.hwt-input {
+	display: block;
+	margin: 0;
+	padding: 0;
+	border-radius: 0;
+	background-color: transparent;
+	font: inherit;
+}
