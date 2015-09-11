@@ -17,8 +17,11 @@
 }
 
 .hwt-content {
-	box-sizing: border-box;
-	min-height: 100%;
+	/* !important to prevent .hwt-text from overriding */
+	width: auto !important;
+	height: auto !important;
+	border-color: transparent !important;
+
 	white-space: pre-wrap;
 	word-wrap: break-word;
 	color: transparent;
@@ -35,4 +38,8 @@
 	border-radius: 0;
 	background-color: transparent;
 	font: inherit;
+}
+
+.hwt-text {
+	border: 1px solid;
 }

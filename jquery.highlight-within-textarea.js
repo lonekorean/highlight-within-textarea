@@ -1,15 +1,15 @@
 (function($) {
 	var PREFIX = 'hwt';
 
-	var InputTextHighlighter = function($el, options) {
+	var HighlightWithinTextarea = function($el, options) {
 		this.$el = $el;
 		this.options = $.extend({}, this.defaultOptions, options);
-		this.counter = InputTextHighlighter.prototype.sharedCounter++;
+		this.counter = HighlightWithinTextarea.prototype.sharedCounter++;
 
 		this.generate();
 	};
 
-	InputTextHighlighter.prototype = {
+	HighlightWithinTextarea.prototype = {
 		sharedCounter: 0,
 
 		defaultOptions: {
@@ -19,12 +19,10 @@
 		generate: function() {
 			this.$wrapper = $('<div>', { class: PREFIX + '-wrapper' });
 			this.$backdrop = $('<div>', { class: PREFIX + '-backdrop' });
-			this.$content = $('<div>', {
-				class: PREFIX + '-content ' + PREFIX + '-text'
-			});
+			this.$content = $('<div>', { class: PREFIX + '-text ' + PREFIX + '-content' });
 
 			this.$el
-				.addClass(PREFIX + '-input ' + PREFIX + '-text')
+				.addClass(PREFIX + '-text ' + PREFIX + '-input')
 				.wrap(this.$wrapper)
 				.before(this.$backdrop.append(this.$content));
 
@@ -169,16 +167,16 @@
 	};
 
 	// the actual jQuery plugin
-	$.fn.inputTextHighlighter = function(options) {
+	$.fn.highlightWithinTextarea = function(options) {
 		return this.each(function() {
 			var $this = $(this);
-			var inputTextHighlighter = $this.data(PREFIX);
-			if (inputTextHighlighter) {
-				inputTextHighlighter.destroy();
+			var highlightWithinTextarea = $this.data(PREFIX);
+			if (highlightWithinTextarea) {
+				highlightWithinTextarea.destroy();
 			}
 
-			inputTextHighlighter = new InputTextHighlighter($this, options);
-			$this.data(PREFIX, inputTextHighlighter);
+			highlightWithinTextarea = new HighlightWithinTextarea($this, options);
+			$this.data(PREFIX, highlightWithinTextarea);
 		});
 	};
 })(jQuery);

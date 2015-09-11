@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Highlight Within Textarea</title>
+
+		<!-- need jQuery, obviously -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+
+		<!-- highlight-within-textarea CSS/JS -->
+		<link href="./jquery.highlight-within-textarea.css" rel="stylesheet">
+		<script src="./jquery.highlight-within-textarea.js"></script>
+
+		<!-- make things pretty -->
+		<style>
+			@import url(https://fonts.googleapis.com/css?family=Roboto+Mono);
+
+			body {
+				margin: 40px;
+				font: 16px/1 'Roboto Mono', sans-serif;
+			}
+			.hwt-text {
+				width: 500px;
+				height: 200px;
+				padding: 20px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Highlight Within Textarea</h1>
+		<p>Just a couple examples. View source to see usage.</p>
+
+		<section>
+			<h2>Using Regex</h2>
+			<p>Highlight numbers.</p>
+			<textarea class="example-regex">1600 Pennsylvania Ave NW, Washington, DC 20500</textarea>
+			<script>
+				function onInputRegex() {
+					return /\d+/g;
+				}
+
+				$('.example-regex').highlightWithinTextarea({ onInput: onInputRegex });
+			</script>
+		</section>
+	</body>
+</html>
