@@ -1,29 +1,27 @@
 .hwt-wrapper {
 	display: inline-block;
 	position: relative;
-	overflow: hidden;
-	-webkit-text-size-adjust: none;
+	overflow: hidden !important;
+	-webkit-text-size-adjust: none !important;
 }
 
 .hwt-backdrop {
-	position: absolute;
-	z-index: -1;
-	top: 0;
-	right: -20px;
-	bottom: 0;
-	left: 0;
-	padding-right: 20px;
-	overflow: auto;
+	position: absolute !important;
+	z-index: -1 !important;
+	top: 0 !important;
+	right: -20px !important;
+	bottom: 0 !important;
+	left: 0 !important;
+	padding-right: 20px !important;
+	overflow: auto !important;
 }
 
 .hwt-content {
-	/* !important to prevent .hwt-text from overriding */
 	width: auto !important;
 	height: auto !important;
 	border-color: transparent !important;
-
-	white-space: pre-wrap;
-	word-wrap: break-word;
+	white-space: pre-wrap !important;
+	word-wrap: break-word !important;
 	color: transparent;
 }
 
@@ -32,7 +30,7 @@
 }
 
 .hwt-input {
-	display: block;
+	display: block !important;
 	margin: 0;
 	padding: 0;
 	border-radius: 0;
