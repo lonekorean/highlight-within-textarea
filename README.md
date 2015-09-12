@@ -1,4 +1,4 @@
 # highlight-within-textarea
 jQuery plugin for highlighting bits of text within a textarea.
 
-Documentation coming soon.
+Work in progress. Documentation coming soon.

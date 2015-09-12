@@ -13,33 +13,67 @@
 
 		<!-- make things pretty -->
 		<style>
-			@import url(https://fonts.googleapis.com/css?family=Roboto+Mono);
+			/* for the page */
+
+			@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700|Roboto+Mono);
 
 			body {
-				margin: 40px;
-				font: 16px/1 'Roboto Mono', sans-serif;
+				width: 60%;
+				margin: 40px auto;
+				font: 18px/1.4 'Open Sans', sans-serif;
+				background-color: #eee;
 			}
+
+			section {
+				margin-top: 60px;
+			}
+
+			script {
+				display: block;
+				margin-top: 10px;
+				padding-left: 10px;
+				border-left: 8px solid #ccc;
+				white-space: pre-wrap;
+				font: 14px/1.4 'Roboto Mono', sans-serif;
+			}
+
+			/* for textarea and highlights */
+
 			.hwt-text {
 				width: 500px;
-				height: 200px;
+				height: 100px;
 				padding: 20px;
+				font: 18px/25px 'Roboto Mono', sans-serif;
+				background-color: #fff;
+			}
+
+			.hwt-text mark {
+				border-radius: 3px;
+			}
+
+			.hwt-text mark:nth-child(2n) {
+				background-color: #ffd3b7;
+			}
+
+			.hwt-text mark:nth-child(2n + 1) {
+				background-color: #c3e0e8;
 			}
 		</style>
 	</head>
 	<body>
 		<h1>Highlight Within Textarea</h1>
-		<p>Just a couple examples. View source to see usage.</p>
+		<p>Some example use cases with code snippets.</p>
 
 		<section>
 			<h2>Using Regex</h2>
-			<p>Highlight numbers.</p>
-			<textarea class="example-regex">1600 Pennsylvania Ave NW, Washington, DC 20500</textarea>
+			<p>You can provide an onInput callback that returns a regex. This example simply highlights all numbers.</p>
+			<textarea class="regex-example">1600 Pennsylvania Ave NW, Washington, DC 20500</textarea>
 			<script>
-				function onInputRegex() {
-					return /\d+/g;
-				}
+function onInputRegex() {
+	return /\d+/g;
+}
 
-				$('.example-regex').highlightWithinTextarea({ onInput: onInputRegex });
+$('textarea.regex-example').highlightWithinTextarea({ onInput: onInputRegex });
 			</script>
 		</section>
 	</body>
