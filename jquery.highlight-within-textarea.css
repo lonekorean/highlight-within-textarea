@@ -35,7 +35,7 @@
 
 .hwt-content {
 	border: 1px solid;
-	background-color: transparent !important;
+	background: none transparent !important;
 }
 
 .hwt-content mark {

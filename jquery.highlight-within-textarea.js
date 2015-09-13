@@ -95,25 +95,25 @@
 		},
 
 		handleInput: function() {
-			var content = this.$el.val()
-			var payload = this.options.onInput(content);
+			var input = this.$el.val()
+			var payload = this.options.onInput(input);
 			switch (this.getType(payload)) {
 				case 'string':
-					content = this.markString(content, payload);
+					input = this.markString(input, payload);
 					break;
 				case 'regexp':
-					content = this.markRegExp(content, payload);
+					input = this.markRegExp(input, payload);
 					break;
 				case 'array':
-					content = this.markArray(content, payload);
+					input = this.markArray(input, payload);
 					break;
 				default:
 					throw 'Unrecognized payload type returned from onInput callback.';
 			}
 
 			// this keeps scrolling aligned when input ends with a newline
-			content = content.replace(/\n$/, '\n\n');
-			this.$highlights.html(content);
+			input = input.replace(/\n$/, '\n\n');
+			this.$highlights.html(input);
 		},
 
 		handleScroll: function() {
@@ -121,33 +121,33 @@
 			this.$backdrop.scrollTop(scrollTop);
 		},
 
-		markString: function(content, payload) {
-			// just a sanity check to make sure content isn't out of whack
+		markString: function(input, payload) {
+			// just a sanity check to make sure marked input isn't corrupted
 			var stripped = payload.replace(/<\/?mark>/gi, '');
-			if (stripped !== content) {
+			if (stripped !== input) {
 				throw 'Unallowed changes in string returned from onInput callback.';
 			}
 			return payload;
 		},
 
-		markRegExp: function(content, payload) {
-			return content.replace(payload, '<mark>$&</mark>');
+		markRegExp: function(input, payload) {
+			return input.replace(payload, '<mark>$&</mark>');
 		},
 
-		markArray: function(content, payload) {
+		markArray: function(input, payload) {
 			var offset = 0;
 			payload.forEach(function(element) {
 				// insert open tag
 				var open = element[0] + offset;
-				content = content.slice(0, open) + '<mark>' + content.slice(open);
+				input = input.slice(0, open) + '<mark>' + input.slice(open);
 				offset += 6;
 
 				// insert close tag
 				var close = element[1] + offset;
-				content = content.slice(0, close) + '</mark>' + content.slice(close);
+				input = input.slice(0, close) + '</mark>' + input.slice(close);
 				offset += 7;
 			}, this);
-			return content;
+			return input;
 		},
 
 		destroy: function() {
