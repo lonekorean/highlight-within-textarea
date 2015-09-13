@@ -1,4 +1,4 @@
-.hwt-wrapper {
+.hwt-container {
 	display: inline-block;
 	position: relative;
 	overflow: hidden !important;
@@ -7,7 +7,6 @@
 
 .hwt-backdrop {
 	position: absolute !important;
-	z-index: -1 !important;
 	top: 0 !important;
 	right: -20px !important;
 	bottom: 0 !important;
@@ -16,7 +15,7 @@
 	overflow: auto !important;
 }
 
-.hwt-content {
+.hwt-highlights {
 	width: auto !important;
 	height: auto !important;
 	border-color: transparent !important;
@@ -25,19 +24,20 @@
 	color: transparent;
 }
 
-.hwt-content mark {
-	color: inherit;
-}
-
 .hwt-input {
 	display: block !important;
+	position: relative !important;
 	margin: 0;
 	padding: 0;
 	border-radius: 0;
-	background-color: transparent !important;
 	font: inherit;
 }
 
-.hwt-text {
+.hwt-content {
 	border: 1px solid;
+	background-color: transparent !important;
+}
+
+.hwt-content mark {
+	color: inherit;
 }

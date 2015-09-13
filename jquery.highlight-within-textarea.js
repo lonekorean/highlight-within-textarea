@@ -14,14 +14,14 @@
 		},
 
 		generate: function() {
-			this.$wrapper = $('<div>', { class: ID + '-wrapper' });
+			this.$container = $('<div>', { class: ID + '-container' });
 			this.$backdrop = $('<div>', { class: ID + '-backdrop' });
-			this.$content = $('<div>', { class: ID + '-text ' + ID + '-content' });
+			this.$highlights = $('<div>', { class: ID + '-highlights ' + ID + '-content' });
 
 			this.$el
-				.addClass(ID + '-text ' + ID + '-input')
-				.wrap(this.$wrapper)
-				.before(this.$backdrop.append(this.$content))
+				.addClass(ID + '-input ' + ID + '-content')
+				.wrap(this.$container)
+				.before(this.$backdrop.append(this.$highlights))
 				.on('input.' + ID, this.handleInput.bind(this))
 				.on('scroll.' + ID, this.handleScroll.bind(this));
 
@@ -41,14 +41,14 @@
 			// textarea, so rearrange a couple box models to make highlights
 			// behave the same way
 			if (isFirefox) {
-				// take padding and border pixels from content div
-				var padding = this.$content.css([
+				// take padding and border pixels from highlights div
+				var padding = this.$highlights.css([
 					'padding-top', 'padding-right', 'padding-bottom', 'padding-left'
 				]);
-				var border = this.$content.css([
+				var border = this.$highlights.css([
 					'border-top-width', 'border-right-width', 'border-bottom-width', 'border-left-width'
 				]);
-				this.$content.css({
+				this.$highlights.css({
 					'padding': '0',
 					'border-width': '0'
 				});
@@ -78,9 +78,9 @@
 			var isWinPhone = ua.indexOf('windows phone') !== -1;
 
 			// iOS adds 3px of (unremovable) padding to the left and right of a
-			// textarea, so adjust content div to match
+			// textarea, so adjust highlights div to match
 			if (isIOS && !isWinPhone) {
-				this.$content.css({
+				this.$highlights.css({
 					'padding-left': '+=3px',
 					'padding-right': '+=3px'
 				});
@@ -113,7 +113,7 @@
 
 			// this keeps scrolling aligned when input ends with a newline
 			content = content.replace(/\n$/, '\n\n');
-			this.$content.html(content);
+			this.$highlights.html(content);
 		},
 
 		handleScroll: function() {

@@ -13,8 +13,6 @@
 
 		<!-- make things pretty -->
 		<style>
-			/* for the page */
-
 			@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700|Roboto+Mono);
 
 			body {
@@ -37,25 +35,27 @@
 				font: 14px/1.4 'Roboto Mono', sans-serif;
 			}
 
-			/* for textarea and highlights */
+			/* background and positioning */
+			.hwt-container {
+				background-color: #fff;
+			}
 
-			.hwt-text {
+			/* size and formatting */
+			.hwt-content {
 				width: 500px;
 				height: 100px;
 				padding: 20px;
 				font: 18px/25px 'Roboto Mono', sans-serif;
-				background-color: #fff;
 			}
 
-			.hwt-text mark {
+			/* highlights */
+			.hwt-content mark {
 				border-radius: 3px;
 			}
-
-			.hwt-text mark:nth-child(2n) {
+			.hwt-content mark:nth-child(2n) {
 				background-color: #ffd3b7;
 			}
-
-			.hwt-text mark:nth-child(2n + 1) {
+			.hwt-content mark:nth-child(2n+1) {
 				background-color: #c3e0e8;
 			}
 		</style>
