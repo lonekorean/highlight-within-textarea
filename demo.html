@@ -64,11 +64,24 @@
 	</head>
 	<body>
 		<h1>Highlight Within Textarea</h1>
-		<p>Some example use cases with code snippets.</p>
+		<p>Some use cases with code snippets. The magic happens by providing an onInput callback to specify what to highlight. The following examples show how.</p>
+
+		<section>
+			<h2>Using Array</h2>
+			<p>Your onInput callback can return an array of arrays to specify highlights by character position. Each inner array has 2 values: a starting index (inclusive) and an ending index (exclusive). This example highlights the first 30 characters, 10 characters at a time.</p>
+			<textarea class="array-example">Bears are mammals of the family Ursidae.</textarea>
+			<script>
+function onInputArray(input) {
+	return [[0, 10], [10, 20], [20, 30]];
+}
+
+$('textarea.array-example').highlightWithinTextarea({ onInput: onInputArray });
+			</script>
+		</section>
 
 		<section>
 			<h2>Using Regex</h2>
-			<p>You can provide an onInput callback that returns a regex. This example simply highlights all numbers.</p>
+			<p>The onInput callback can also return a regex. This example simply highlights all numbers.</p>
 			<textarea class="regex-example">1600 Pennsylvania Ave NW, Washington, DC 20500</textarea>
 			<script>
 function onInputRegex(input) {
@@ -81,7 +94,7 @@ $('textarea.regex-example').highlightWithinTextarea({ onInput: onInputRegex });
 
 		<section>
 			<h2>Using Regex Again</h2>
-			<p>Another common case for regex is to highlight from a list of 1 or more strings.</p>
+			<p>Another common use case is to highlight from a list of 1 or more strings. This is easily done with regex. This example highlights certain country names.</p>
 			<textarea class="regex-again-example">There are about 5,000 potato varieties worldwide. Three thousand of them are found in the Andes alone, mainly in Peru, Bolivia, Ecuador, Chile, and Colombia.</textarea>
 			<script>
 function onInputRegexAgain(input) {
@@ -91,34 +104,5 @@ function onInputRegexAgain(input) {
 $('textarea.regex-again-example').highlightWithinTextarea({ onInput: onInputRegexAgain });
 			</script>
 		</section>
-
-		<section>
-			<h2>Using Array</h2>
-			<p>The onInput callback may also return an array of arrays that specify highlights by character position. Each inner array has 2 numbers: a starting index (inclusive) and an ending index (exclusive). This example highlights the first 30 characters, 10 characters at a time.</p>
-			<textarea class="array-example">Bears are mammals of the family Ursidae.</textarea>
-			<script>
-function onInputArray(input) {
-	return [[0, 10], [10, 20], [20, 30]];
-}
-
-$('textarea.array-example').highlightWithinTextarea({ onInput: onInputArray });
-			</script>
-		</script>
-
-		<section>
-			<h2>Using String</h2>
-			<p>The above cases should handle most needs, but for full control, you can have the onInput callback insert &lt;mark&gt; and &lt;/mark&gt; tags manually and return the result. Just make sure you don't change the input in any other way. This example highlights the full input, but only if it's longer than 30 characters.</p>
-			<textarea class="string-example">The corgi's origin is difficult to trace.</textarea>
-			<script>
-function onInputString(input) {
-	if (input.length > 30) {
-		input = '<mark>' + input + '</mark>'
-	}
-	return input;
-}
-
-$('textarea.string-example').highlightWithinTextarea({ onInput: onInputString });
-			</script>
-		</script>
 	</body>
 </html>

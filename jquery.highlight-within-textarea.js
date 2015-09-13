@@ -98,14 +98,11 @@
 			var input = this.$el.val()
 			var payload = this.options.onInput(input);
 			switch (this.getType(payload)) {
-				case 'string':
-					input = this.markString(input, payload);
+				case 'array':
+					input = this.markArray(input, payload);
 					break;
 				case 'regexp':
 					input = this.markRegExp(input, payload);
-					break;
-				case 'array':
-					input = this.markArray(input, payload);
 					break;
 				default:
 					throw 'Unrecognized payload type returned from onInput callback.';
@@ -119,19 +116,6 @@
 		handleScroll: function() {
 			var scrollTop = this.$el.scrollTop();
 			this.$backdrop.scrollTop(scrollTop);
-		},
-
-		markString: function(input, payload) {
-			// just a sanity check to make sure marked input isn't corrupted
-			var stripped = payload.replace(/<\/?mark>/gi, '');
-			if (stripped !== input) {
-				throw 'Unallowed changes in string returned from onInput callback.';
-			}
-			return payload;
-		},
-
-		markRegExp: function(input, payload) {
-			return input.replace(payload, '<mark>$&</mark>');
 		},
 
 		markArray: function(input, payload) {
@@ -148,6 +132,10 @@
 				offset += 7;
 			}, this);
 			return input;
+		},
+
+		markRegExp: function(input, payload) {
+			return input.replace(payload, '<mark>$&</mark>');
 		},
 
 		destroy: function() {
