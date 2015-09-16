@@ -9,9 +9,9 @@ A native textarea element is used and familiar properties (auto correct, resizab
 
 ### Usage
 
-To see examples in action, check out `demo.html`.
+To see examples in action, check out [demo.html](https://github.com/lonekorean/highlight-within-textarea/blob/master/demo.html).
 
-Make sure you reference both the CSS and the JS files on your page. Then you can attach the plugin to your existing textareas.
+Make sure you reference both the CSS and the JS files on your page. Then you can attach the plugin to your existing textareas:
 
 ```javascript
 $('.my-textarea').highlightWithinTextarea({ onInput: onInputHandler });
@@ -22,23 +22,43 @@ The plugin takes a config object with a single property called `onInput`, which 
 
 If a RegExp object is returned, then any text matching the pattern will be highlighted.
 
-Example: `/\w+/g`.
+Example:
+
+```javascript
+function onInputHandler(input) {
+	return /\w+/g;
+}
+```
 
 ##### Array
 
 The function may also return an array of arrays. Each inner array specifies a span of highlighting and should have exactly 2 values: the starting character index (inclusive) and the ending character index (exclusive).
 
-Example: `[[0, 5], [10, 15]]`.
+Example:
+
+```javascript
+function onInputHandler(input) {
+	return [[0, 5], [10, 15]];
+}
+```
 
 ##### Something Falsey
 
 Returning any falsey value (`false`, `undefined`, `null`, `0`, `''`, or `NaN`) will highlight nothing.
 
-Example: `false`.
+Example:
+
+```javascript
+function onInputHandler(input) {
+	return false;
+}
+```
 
 ### Styling
 
-The plugin has to set up additional elements, so there are a few guidelines for getting your styles in the right places. Here are the classes you'll want to use.
+For reference, [demo.html](https://github.com/lonekorean/highlight-within-textarea/blob/master/demo.html) has some sample styling.
+
+There are a few guidelines for getting your styles in the right places. Here are the classes you'll want to use.
 
 ##### .hwt-container
 
@@ -50,4 +70,4 @@ Use for sizing and text formatting (`width`, `height`, `padding`, `border`, `col
 
 ##### .hwt-content mark
 
-Use for highlighted text. Generally, stuff that doesn't change size is fine (`background-color`, `border-radius`, `box-shadow`, etc.). Changes to `color` won't be visible, since the text in the textarea would cover the colored text in the highlights.
+Use for highlighted text. Generally, stuff that doesn't change size is fine (`background-color`, `border-radius`, `box-shadow`, etc.). Changes to `color` won't be visible, since text in the textarea covers colored text in the highlights.
