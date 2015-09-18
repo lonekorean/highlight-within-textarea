@@ -1,16 +1,15 @@
 (function($) {
 	var ID = 'hwt';
 
-	var HighlightWithinTextarea = function($el, options) {
+	var HighlightWithinTextarea = function($el, onInput) {
 		this.$el = $el;
-		this.options = $.extend({}, this.defaultOptions, options);
+		this.onInput = onInput || this.onInput;
 		this.generate();
 	};
 
 	HighlightWithinTextarea.prototype = {
-		defaultOptions: {
-			// default callback is basically a no-op
-			onInput: function(text) { return text; }
+		onInput: function(text) {
+			throw 'onInput callback not provided.'
 		},
 
 		generate: function() {
@@ -96,16 +95,18 @@
 
 		handleInput: function() {
 			var input = this.$el.val()
-			var payload = this.options.onInput(input);
-			switch (this.getType(payload)) {
-				case 'array':
-					input = this.markArray(input, payload);
-					break;
-				case 'regexp':
-					input = this.markRegExp(input, payload);
-					break;
-				default:
-					throw 'Unrecognized payload type returned from onInput callback.';
+			var payload = this.onInput(input);
+			if (payload) {
+				switch (this.getType(payload)) {
+					case 'array':
+						input = this.markArray(input, payload);
+						break;
+					case 'regexp':
+						input = this.markRegExp(input, payload);
+						break;
+					default:
+						throw 'Unrecognized payload type returned from onInput callback.';
+				}
 			}
 
 			// this keeps scrolling aligned when input ends with a newline
@@ -149,7 +150,7 @@
 	};
 
 	// register the jQuery plugin
-	$.fn.highlightWithinTextarea = function(options) {
+	$.fn.highlightWithinTextarea = function(onInput) {
 		return this.each(function() {
 			var $this = $(this);
 
@@ -158,7 +159,7 @@
 				highlightWithinTextarea.destroy();
 			}
 
-			highlightWithinTextarea = new HighlightWithinTextarea($this, options);
+			highlightWithinTextarea = new HighlightWithinTextarea($this, onInput);
 			$this.data(ID, highlightWithinTextarea);
 		});
 	};

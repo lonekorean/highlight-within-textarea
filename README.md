@@ -11,12 +11,16 @@ A native textarea element is used and familiar properties (auto correct, resizab
 
 To see examples in action, check out [demo.html](https://github.com/lonekorean/highlight-within-textarea/blob/master/demo.html).
 
-Make sure you reference both the CSS and the JS files on your page. Then you can attach the plugin to your existing textareas:
+Make sure you reference both the CSS and the JS files on your page. Then you can use the plugin like this:
 
 ```javascript
-$('.my-textarea').highlightWithinTextarea({ onInput: onInputHandler });
+function onInput(input) {
+	// do stuff, return something
+}
+
+$('.my-textarea').highlightWithinTextarea(onInput);
 ```
-The plugin takes a config object with a single property called `onInput`, which is a callback function that determines what text to highlight. This function can return different types, as outlined below.
+The plugin takes a callback function that is called every time the textarea's input changes. Its job is to indicate which bits of text should be highlighted. There are a couple ways to do this, depending on the type of what is returned, as outlined below.
 
 ##### Regex
 
@@ -25,7 +29,7 @@ If a RegExp object is returned, then any text matching the pattern will be highl
 Example:
 
 ```javascript
-function onInputHandler(input) {
+function onInput(input) {
 	return /\w+/g;
 }
 ```
@@ -37,7 +41,7 @@ The function may also return an array of arrays. Each inner array specifies a sp
 Example:
 
 ```javascript
-function onInputHandler(input) {
+function onInput(input) {
 	return [[0, 5], [10, 15]];
 }
 ```
@@ -49,7 +53,7 @@ Returning any falsey value (`false`, `undefined`, `null`, `0`, `''`, or `NaN`) w
 Example:
 
 ```javascript
-function onInputHandler(input) {
+function onInput(input) {
 	return false;
 }
 ```
@@ -71,3 +75,11 @@ Use for sizing and text formatting (`width`, `height`, `padding`, `border`, `col
 ##### .hwt-content mark
 
 Use for highlighted text. Generally, stuff that doesn't change size is fine (`background-color`, `border-radius`, `box-shadow`, etc.). Changes to `color` won't be visible, since text in the textarea covers colored text in the highlights.
+
+### Destroying
+
+You can remove the plugin from a textarea with this:
+
+```javascript
+$('.my-textarea').data('hwt').destroy();
+```

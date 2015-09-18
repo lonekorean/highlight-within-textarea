@@ -75,7 +75,7 @@ function onInputRegex(input) {
 	return /\d+/g;
 }
 
-$('textarea.regex-example').highlightWithinTextarea({ onInput: onInputRegex });
+$('textarea.regex-example').highlightWithinTextarea(onInputRegex);
 			</script>
 		</section>
 
@@ -88,7 +88,7 @@ function onInputRegexAgain(input) {
 	return /chile|ecuador|peru/gi;
 }
 
-$('textarea.regex-again-example').highlightWithinTextarea({ onInput: onInputRegexAgain });
+$('textarea.regex-again-example').highlightWithinTextarea(onInputRegexAgain);
 			</script>
 		</section>
 
@@ -106,7 +106,7 @@ function onInputArray(input) {
 	}
 }
 
-$('textarea.array-example').highlightWithinTextarea({ onInput: onInputArray });
+$('textarea.array-example').highlightWithinTextarea(onInputArray);
 			</script>
 		</section>
 	</body>
