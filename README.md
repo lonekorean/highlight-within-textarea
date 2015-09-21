@@ -9,7 +9,7 @@ A native textarea element is used and familiar properties (auto correct, resizab
 
 ### Usage
 
-To see examples in action, check out [demo.html](https://github.com/lonekorean/highlight-within-textarea/blob/master/demo.html).
+To see examples in action, check out [the demo page](http://lonekorean.github.io/highlight-within-textarea/index.html).
 
 Make sure you reference both the CSS and the JS files on your page. Then you can use the plugin like this:
 
@@ -60,7 +60,7 @@ function onInput(input) {
 
 ### Styling
 
-For reference, [demo.html](https://github.com/lonekorean/highlight-within-textarea/blob/master/demo.html) has some sample styling.
+For reference, [the demo page](http://lonekorean.github.io/highlight-within-textarea/index.html) has some sample styling.
 
 There are a few guidelines for getting your styles in the right places. Here are the classes you'll want to use.
 
