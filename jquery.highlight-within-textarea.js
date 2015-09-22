@@ -1,3 +1,10 @@
+/*
+ * highlight-within-textarea v1.0.0
+ *
+ * @author  Will Boyd
+ * @github  https://github.com/lonekorean/highlight-within-textarea
+ */
+
 (function($) {
 	var ID = 'hwt';
 
