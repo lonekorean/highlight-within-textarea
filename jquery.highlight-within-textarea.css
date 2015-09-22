@@ -5,6 +5,11 @@
 	-webkit-text-size-adjust: none !important;
 }
 
+.hwt-accessibility {
+	position: absolute !important;
+	left: -9999px !important;
+}
+
 .hwt-backdrop {
 	position: absolute !important;
 	top: 0 !important;

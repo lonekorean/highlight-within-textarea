@@ -13,13 +13,24 @@
 		},
 
 		generate: function() {
-			this.$container = $('<div>', { class: ID + '-container' });
-			this.$backdrop = $('<div>', { class: ID + '-backdrop' });
-			this.$highlights = $('<div>', { class: ID + '-highlights ' + ID + '-content' });
+			this.$container = $('<div>', {
+				'class': ID + '-container'
+			});
+			this.$accessibility = $('<div>', {
+				'class': ID + '-accessibility',
+				'aria-live': 'aggressive'
+			});
+			this.$backdrop = $('<div>', {
+				'class': ID + '-backdrop'
+			});
+			this.$highlights = $('<div>', {
+				'class': ID + '-highlights ' + ID + '-content'
+			});
 
 			this.$el
 				.addClass(ID + '-input ' + ID + '-content')
 				.wrap(this.$container)
+				.before(this.$accessibility)
 				.before(this.$backdrop.append(this.$highlights))
 				.on('input.' + ID, this.handleInput.bind(this))
 				.on('scroll.' + ID, this.handleScroll.bind(this));
@@ -112,6 +123,8 @@
 			// this keeps scrolling aligned when input ends with a newline
 			input = input.replace(/\n$/, '\n\n');
 			this.$highlights.html(input);
+
+			this.notifyScreenReader();
 		},
 
 		handleScroll: function() {
@@ -137,6 +150,15 @@
 
 		markRegExp: function(input, payload) {
 			return input.replace(payload, '<mark>$&</mark>');
+		},
+
+		notifyScreenReader: function() {
+			var $marks = this.$highlights.find('mark');
+			var csv = $marks.map(function() {
+				return $(this).text();
+			}).get().join(', ');
+			var screenReaderText = csv.length > 0 ? 'highlights: ' + csv : 'nothing highlighted';
+			this.$accessibility.text(screenReaderText);
 		},
 
 		destroy: function() {
