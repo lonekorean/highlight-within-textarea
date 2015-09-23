@@ -12,7 +12,7 @@
 	bottom: 0 !important;
 	left: 0 !important;
 	padding-right: 20px !important;
-	overflow: auto !important;
+	overflow: auto;
 }
 
 .hwt-highlights {
@@ -21,7 +21,7 @@
 	border-color: transparent !important;
 	white-space: pre-wrap !important;
 	word-wrap: break-word !important;
-	color: transparent;
+	color: transparent !important;
 }
 
 .hwt-input {
@@ -31,6 +31,7 @@
 	padding: 0;
 	border-radius: 0;
 	font: inherit;
+	overflow: auto;
 }
 
 .hwt-content {

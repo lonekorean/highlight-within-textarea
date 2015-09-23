@@ -1,3 +1,10 @@
+/*
+ * highlight-within-textarea v1.0.0
+ *
+ * @author  Will Boyd
+ * @github  https://github.com/lonekorean/highlight-within-textarea
+ */
+
 (function($) {
 	var ID = 'hwt';
 
@@ -24,66 +31,73 @@
 				.on('input.' + ID, this.handleInput.bind(this))
 				.on('scroll.' + ID, this.handleScroll.bind(this));
 
-			// some browsers have specific quirks to work around that are not a
-			// matter of feature detection
-			this.fixFirefox();
-			this.fixIOS();
+			// sadly, some browsers have specific quirks to work around that are not
+			// a matter of feature detection
+			this.browser = this.detectBrowser();
+			if (this.browser === 'firefox') {
+				this.fixFirefox();
+			} else if (this.browser === 'ios') {
+				this.fixIOS();
+			}
 
 			// pre-fire this event to highlight any existing input
 			this.handleInput(this.$el[0]);
 		},
 
-		fixFirefox: function() {
-			var isFirefox = window.navigator.userAgent.toLowerCase().indexOf('firefox') !== -1;
-
-			// Firefox doesn't show text that scrolls into the padding of a
-			// textarea, so rearrange a couple box models to make highlights
-			// behave the same way
-			if (isFirefox) {
-				// take padding and border pixels from highlights div
-				var padding = this.$highlights.css([
-					'padding-top', 'padding-right', 'padding-bottom', 'padding-left'
-				]);
-				var border = this.$highlights.css([
-					'border-top-width', 'border-right-width', 'border-bottom-width', 'border-left-width'
-				]);
-				this.$highlights.css({
-					'padding': '0',
-					'border-width': '0'
-				});
-
-				this.$backdrop
-					.css({
-						// give padding pixels to backdrop div
-						'margin-top': '+=' + padding['padding-top'],
-						'margin-right': '+=' + padding['padding-right'],
-						'margin-bottom': '+=' + padding['padding-bottom'],
-						'margin-left': '+=' + padding['padding-left'],
-					})
-					.css({
-						// give border pixels to backdrop div
-						'margin-top': '+=' + border['border-top-width'],
-						'margin-right': '+=' + border['border-right-width'],
-						'margin-bottom': '+=' + border['border-bottom-width'],
-						'margin-left': '+=' + border['border-left-width'],
-					});
+		detectBrowser: function() {
+			var ua = window.navigator.userAgent.toLowerCase();
+			if (ua.indexOf('firefox') !== -1) {
+				return 'firefox';
+			} else if (!!ua.match(/msie|trident\/7|edge/)) {
+				return 'ie';
+			} else if (!!ua.match(/ipad|iphone|ipod/) && ua.indexOf('windows phone') === -1) {
+				// Windows Phone flags itself as "like iPhone", thus the extra check
+				return 'ios';
+			} else {
+				return 'other';
 			}
 		},
 
-		fixIOS: function() {
-			// Windows Phone flags itself as "like iPhone", thus the extra check
-			var ua = window.navigator.userAgent.toLowerCase();
-			var isIOS = !!ua.match(/ipad|iphone|ipod/);
-			var isWinPhone = ua.indexOf('windows phone') !== -1;
+		// Firefox doesn't show text that scrolls into the padding of a
+		// textarea, so rearrange a couple box models to make highlights
+		// behave the same way
+		fixFirefox: function() {
+			// take padding and border pixels from highlights div
+			var padding = this.$highlights.css([
+				'padding-top', 'padding-right', 'padding-bottom', 'padding-left'
+			]);
+			var border = this.$highlights.css([
+				'border-top-width', 'border-right-width', 'border-bottom-width', 'border-left-width'
+			]);
+			this.$highlights.css({
+				'padding': '0',
+				'border-width': '0'
+			});
 
-			// iOS adds 3px of (unremovable) padding to the left and right of a
-			// textarea, so adjust highlights div to match
-			if (isIOS && !isWinPhone) {
-				this.$highlights.css({
-					'padding-left': '+=3px',
-					'padding-right': '+=3px'
+			this.$backdrop
+				.css({
+					// give padding pixels to backdrop div
+					'margin-top': '+=' + padding['padding-top'],
+					'margin-right': '+=' + padding['padding-right'],
+					'margin-bottom': '+=' + padding['padding-bottom'],
+					'margin-left': '+=' + padding['padding-left'],
+				})
+				.css({
+					// give border pixels to backdrop div
+					'margin-top': '+=' + border['border-top-width'],
+					'margin-right': '+=' + border['border-right-width'],
+					'margin-bottom': '+=' + border['border-bottom-width'],
+					'margin-left': '+=' + border['border-left-width'],
 				});
-			}
+		},
+
+		// iOS adds 3px of (unremovable) padding to the left and right of a
+		// textarea, so adjust highlights div to match
+		fixIOS: function() {
+			this.$highlights.css({
+				'padding-left': '+=3px',
+				'padding-right': '+=3px'
+			});
 		},
 
 		getType: function(instance) {
@@ -111,6 +125,12 @@
 
 			// this keeps scrolling aligned when input ends with a newline
 			input = input.replace(/\n$/, '\n\n');
+
+			if (this.browser === 'ie') {
+				// IE wraps whitespace differently in a div vs textarea, this fixes it
+				input = input.replace(/ /g, ' <wbr>');
+			}
+
 			this.$highlights.html(input);
 		},
 
