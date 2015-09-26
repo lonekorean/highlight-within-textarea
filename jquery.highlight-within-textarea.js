@@ -1,5 +1,5 @@
 /*
- * highlight-within-textarea v1.0.0
+ * highlight-within-textarea v1.0.1
  *
  * @author  Will Boyd
  * @github  https://github.com/lonekorean/highlight-within-textarea
@@ -31,19 +31,22 @@
 				.on('input.' + ID, this.handleInput.bind(this))
 				.on('scroll.' + ID, this.handleScroll.bind(this));
 
-			// sadly, some browsers have specific quirks to work around that are not
-			// a matter of feature detection
 			this.browser = this.detectBrowser();
-			if (this.browser === 'firefox') {
-				this.fixFirefox();
-			} else if (this.browser === 'ios') {
-				this.fixIOS();
+			switch (this.browser) {
+				case 'firefox':
+					this.fixFirefox();
+					break;
+				case 'ios':
+					this.fixIOS();
+					break;
 			}
 
 			// pre-fire this event to highlight any existing input
 			this.handleInput(this.$el[0]);
 		},
 
+		// yeah, browser sniffing sucks, but there are browser-specific quirks
+		// to handle that are not a matter of feature detection
 		detectBrowser: function() {
 			var ua = window.navigator.userAgent.toLowerCase();
 			if (ua.indexOf('firefox') !== -1) {
@@ -137,6 +140,9 @@
 		handleScroll: function() {
 			var scrollTop = this.$el.scrollTop();
 			this.$backdrop.scrollTop(scrollTop);
+
+			var scrollLeft = this.$el.scrollLeft();
+			this.$backdrop.scrollLeft(scrollLeft);
 		},
 
 		markArray: function(input, payload) {

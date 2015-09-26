@@ -5,7 +5,7 @@ jQuery plugin for highlighting bits of text within a textarea.
 
 It's not actually possible to style text in a textarea, because any markup within a textarea is treated as plain text. This plugin aims to fake it, allowing you to highlight pieces of text inside a textarea.
 
-A native textarea element is used and familiar properties (auto correct, resizability, etc.) work as expected.
+A native textarea element is used and familiar properties (auto-correct, scrolling, resizing, etc.) work as expected.
 
 ### Usage
 
