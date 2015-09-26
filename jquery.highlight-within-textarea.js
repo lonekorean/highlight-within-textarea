@@ -127,7 +127,7 @@
 			}
 
 			// this keeps scrolling aligned when input ends with a newline
-			input = input.replace(/\n$/, '\n\n');
+			input = input.replace(/\n(<\/mark>)?$/, '\n\n');
 
 			if (this.browser === 'ie') {
 				// IE wraps whitespace differently in a div vs textarea, this fixes it
