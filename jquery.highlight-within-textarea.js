@@ -20,16 +20,20 @@
 		},
 
 		generate: function() {
-			this.$container = $('<div>', { class: ID + '-container' });
-			this.$backdrop = $('<div>', { class: ID + '-backdrop' });
-			this.$highlights = $('<div>', { class: ID + '-highlights ' + ID + '-content' });
-
 			this.$el
 				.addClass(ID + '-input ' + ID + '-content')
-				.wrap(this.$container)
-				.before(this.$backdrop.append(this.$highlights))
 				.on('input.' + ID, this.handleInput.bind(this))
 				.on('scroll.' + ID, this.handleScroll.bind(this));
+
+			this.$highlights = $('<div>', { class: ID + '-highlights ' + ID + '-content' });
+
+			this.$backdrop = $('<div>', { class: ID + '-backdrop' })
+				.append(this.$highlights);
+
+			this.$container = $('<div>', { class: ID + '-container' })
+				.insertAfter(this.$el)
+				.append(this.$backdrop, this.$el) // moves $el into $container
+				.on('scroll', this.blockContainerScroll.bind(this));
 
 			this.browser = this.detectBrowser();
 			switch (this.browser) {
@@ -141,8 +145,17 @@
 			var scrollTop = this.$el.scrollTop();
 			this.$backdrop.scrollTop(scrollTop);
 
+			// Chrome and Safari won't break long strings of spaces, which can cause
+			// horizontal scrolling, this compensates by shifting highlights by the
+			// horizontally scrolled amount to keep things aligned
 			var scrollLeft = this.$el.scrollLeft();
-			this.$backdrop.scrollLeft(scrollLeft);
+			this.$backdrop.css('transform', (scrollLeft > 0) ? 'translateX(' + -scrollLeft + 'px)' : '');
+		},
+
+		// in Chrome, page up/down in the textarea will shift stuff within the
+		// container (despite the CSS), this immediately reverts the shift
+		blockContainerScroll: function(e) {
+			this.$container.scrollLeft(0);
 		},
 
 		markArray: function(input, payload) {
