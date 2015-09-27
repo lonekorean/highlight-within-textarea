@@ -1,5 +1,5 @@
 /*
- * highlight-within-textarea v1.0.1
+ * highlight-within-textarea v1.0.2
  *
  * @author  Will Boyd
  * @github  https://github.com/lonekorean/highlight-within-textarea
