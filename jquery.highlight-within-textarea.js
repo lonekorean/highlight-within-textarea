@@ -7,6 +7,8 @@
 
 (function($) {
 	var ID = 'hwt';
+	var OPEN_MARK = '--##HWT:OPEN##--';
+	var CLOSE_MARK = '--##HWT:CLOSE##--';
 
 	var HighlightWithinTextarea = function($el, onInput) {
 		this.$el = $el;
@@ -131,7 +133,16 @@
 			}
 
 			// this keeps scrolling aligned when input ends with a newline
-			input = input.replace(/\n(<\/mark>)?$/, '\n\n');
+			input = input.replace(new RegExp('\\n(' + CLOSE_MARK + ')?$'), '\n\n$1');
+
+			// escape HTML
+			input = input.replace(/&/g, '&amp;')
+					.replace(/</g, '&lt;')
+					.replace(/>/g, '&gt;');
+
+			// replace tokens with actual mark tags
+			input = input.replace(new RegExp(OPEN_MARK, 'g'), '<mark>');
+			input = input.replace(new RegExp(CLOSE_MARK, 'g'), '</mark>');
 
 			if (this.browser === 'ie') {
 				// IE wraps whitespace differently in a div vs textarea, this fixes it
@@ -163,19 +174,19 @@
 			payload.forEach(function(element) {
 				// insert open tag
 				var open = element[0] + offset;
-				input = input.slice(0, open) + '<mark>' + input.slice(open);
-				offset += 6;
+				input = input.slice(0, open) + OPEN_MARK + input.slice(open);
+				offset += OPEN_MARK.length;
 
 				// insert close tag
 				var close = element[1] + offset;
-				input = input.slice(0, close) + '</mark>' + input.slice(close);
-				offset += 7;
+				input = input.slice(0, close) + CLOSE_MARK + input.slice(close);
+				offset += CLOSE_MARK.length;
 			}, this);
 			return input;
 		},
 
 		markRegExp: function(input, payload) {
-			return input.replace(payload, '<mark>$&</mark>');
+			return input.replace(payload, OPEN_MARK + '$&' + CLOSE_MARK);
 		},
 
 		destroy: function() {
