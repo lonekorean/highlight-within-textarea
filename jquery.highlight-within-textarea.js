@@ -127,6 +127,9 @@
 					case 'regexp':
 						input = this.markRegExp(input, payload);
 						break;
+		                    	case 'object':
+		                	 	input = this.markObject(input, payload);
+		                		break;
 					default:
 						throw 'Unrecognized payload type returned from onInput callback.';
 				}
@@ -188,6 +191,16 @@
 		markRegExp: function(input, payload) {
 			return input.replace(payload, OPEN_MARK + '$&' + CLOSE_MARK);
 		},
+
+	        markObject: function(input, payload) {
+	            for (var key in payload) {
+	                // skip loop if the property is from prototype
+	                if (!payload.hasOwnProperty(key)) continue;
+	                var regex = payload[key];
+	                input = input.replace(regex, '<mark class="'+key+'">$&</mark>');
+	            }
+	            return input;
+	        },
 
 		destroy: function() {
 			this.$backdrop.remove();
