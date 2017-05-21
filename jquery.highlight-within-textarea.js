@@ -1,5 +1,5 @@
 /*
- * highlight-within-textarea v1.0.2
+ * highlight-within-textarea
  *
  * @author  Will Boyd
  * @github  https://github.com/lonekorean/highlight-within-textarea
@@ -7,18 +7,48 @@
 
 (function($) {
 	var ID = 'hwt';
+	var NAME = 'highlight-within-textarea';
 	var OPEN_MARK = '--##HWT:OPEN##--';
 	var CLOSE_MARK = '--##HWT:CLOSE##--';
 
-	var HighlightWithinTextarea = function($el, onInput) {
-		this.$el = $el;
-		this.onInput = onInput || this.onInput;
-		this.generate();
+	var HighlightWithinTextarea = function($el, config) {
+		this.init($el, config);
 	};
 
 	HighlightWithinTextarea.prototype = {
-		onInput: function(text) {
-			throw 'onInput callback not provided.'
+		init: function($el, config) {
+			this.$el = $el;
+
+			if (config === undefined) {
+				throw NAME + ': config object not provided.';
+			}
+
+			// for backwards compatibility with v1
+			if (this.getType(config) === 'function') {
+				config = { highlight: config };
+			}
+
+			if (this.getType(config.hightlight) === 'array') {
+				this.hightlight = config.highlight;
+			} else {
+				// convert to single item array
+				this.highlight = [config.highlight];
+			}
+
+			this.generate();
+		},
+
+		getType: function(instance) {
+			if (Array.isArray(instance)) {
+				if (instance.length === 2 && typeof instance[0] === 'number' && typeof instance[1] === 'number') {
+					// this isn't a real type, just a specially treated array
+					return 'range';
+				} else {
+					return 'array';
+				}
+			} else {
+				return typeof instance;
+			}
 		},
 
 		generate: function() {
@@ -47,8 +77,8 @@
 					break;
 			}
 
-			// pre-fire this event to highlight any existing input
-			this.handleInput(this.$el[0]);
+			// trigger input event to highlight any existing input
+			this.handleInput();
 		},
 
 		// yeah, browser sniffing sucks, but there are browser-specific quirks
@@ -109,15 +139,13 @@
 			});
 		},
 
-		getType: function(instance) {
-			return Object.prototype.toString.call(instance)
-				.replace('[object ', '')
-				.replace(']', '')
-				.toLowerCase();
-		},
-
 		handleInput: function() {
-			var input = this.$el.val()
+			var input = this.$el.val();
+			var ranges = this.getArrayRanges(input, this.highlight); // top level highlight is always an array
+
+			console.log(ranges);
+
+/*
 			var payload = this.onInput(input);
 			if (payload) {
 				switch (this.getType(payload)) {
@@ -131,7 +159,8 @@
 						throw 'Unrecognized payload type returned from onInput callback.';
 				}
 			}
-
+*/
+/*
 			// this keeps scrolling aligned when input ends with a newline
 			input = input.replace(new RegExp('\\n(' + CLOSE_MARK + ')?$'), '\n\n$1');
 
@@ -150,6 +179,42 @@
 			}
 
 			this.$highlights.html(input);
+*/
+		},
+
+		getRanges: function(input, highlight) {
+			switch (this.getType(highlight)) {
+				case 'array':
+					return this.getArrayRanges(input, highlight);
+				case 'function':
+					return this.getFunctionRanges(input, highlight);
+				case 'regexp':
+					return this.getRegExpRanges(input, highlight);
+				case 'function':
+					return this.getFunctionRanges(input, highlight);
+				case 'range':
+					return this.getRangeRanges(input, highlight);
+				default:
+					if (!highlight) {
+						return [];
+					} else {
+						throw 'Unrecognized highlight type';
+					}
+			}
+		},
+
+		getArrayRanges: function(input, array) {
+			var ranges = array.map(this.getRanges.bind(this, input));
+			return Array.prototype.concat.apply([], ranges);
+
+		},
+
+		getFunctionRanges: function(input, func) {
+			return this.getRanges(input, func(input));
+		},
+
+		getRangeRanges: function(input, range) {
+			return [range];
 		},
 
 		handleScroll: function() {
