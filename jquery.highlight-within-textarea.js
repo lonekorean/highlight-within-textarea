@@ -141,25 +141,10 @@
 
 		handleInput: function() {
 			var input = this.$el.val();
-			var ranges = this.getArrayRanges(input, this.highlight); // top level highlight is always an array
+			var ranges = this.getRanges(input, this.highlight);
+			var boundaries = this.getBoundaries(ranges);
 
-			console.log(ranges);
-
-/*
-			var payload = this.onInput(input);
-			if (payload) {
-				switch (this.getType(payload)) {
-					case 'array':
-						input = this.markArray(input, payload);
-						break;
-					case 'regexp':
-						input = this.markRegExp(input, payload);
-						break;
-					default:
-						throw 'Unrecognized payload type returned from onInput callback.';
-				}
-			}
-*/
+			this.renderMarks(boundaries);
 /*
 			// this keeps scrolling aligned when input ends with a newline
 			input = input.replace(new RegExp('\\n(' + CLOSE_MARK + ')?$'), '\n\n$1');
@@ -182,6 +167,45 @@
 */
 		},
 
+		getBoundaries: function(ranges) {
+			var boundaries = [];
+			ranges.forEach(function(range) {
+				boundaries.push({
+					type: 'start',
+					index: range[0]
+				});
+				boundaries.push({
+					type: 'stop',
+					index: range[1]
+				});
+			});
+
+			this.sortBoundaries(boundaries);
+			return boundaries;
+		},
+
+		sortBoundaries: function(boundaries) {
+			// backwards sort (since marks are inserted right to left)
+			boundaries.sort(function(a, b) {
+				if (a.index !== b.index) {
+					return b.index - a.index;
+				} else if (a.type === 'stop') {
+					return 1;
+				} else {
+					return 0;
+				}
+			});
+		},
+
+		renderMarks: function(boundaries) {
+			var input = this.$el.val();
+			boundaries.forEach(function(boundary) {
+				var markup = boundary.type === 'start' ? '<mark>' : '</mark>';
+				input = input.slice(0, boundary.index) + markup + input.slice(boundary.index);
+			});
+			this.$highlights.html(input);
+		},
+
 		getRanges: function(input, highlight) {
 			switch (this.getType(highlight)) {
 				case 'array':
@@ -190,8 +214,8 @@
 					return this.getFunctionRanges(input, highlight);
 				case 'regexp':
 					return this.getRegExpRanges(input, highlight);
-				case 'function':
-					return this.getFunctionRanges(input, highlight);
+				case 'string':
+					return this.getStringRanges(input, highlight);
 				case 'range':
 					return this.getRangeRanges(input, highlight);
 				default:
