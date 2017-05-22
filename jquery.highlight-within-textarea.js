@@ -39,16 +39,26 @@
 		},
 
 		getType: function(instance) {
-			if (Array.isArray(instance)) {
+			var type = typeof instance;
+			if (!instance) {
+				return 'falsey';
+			} else if (Array.isArray(instance)) {
 				if (instance.length === 2 && typeof instance[0] === 'number' && typeof instance[1] === 'number') {
-					// this isn't a real type, just a specially treated array
 					return 'range';
 				} else {
 					return 'array';
 				}
-			} else {
-				return typeof instance;
+			} else if (type === 'object') {
+				if (instance instanceof RegExp) {
+					return 'regexp';
+				} else if (instance.hasOwnProperty('highlight')) {
+					return 'highlight';
+				}
+			} else if (type === 'function' || type === 'string') {
+				return type;
 			}
+
+			return 'other';
 		},
 
 		generate: function() {
@@ -207,7 +217,8 @@
 		},
 
 		getRanges: function(input, highlight) {
-			switch (this.getType(highlight)) {
+			var type = this.getType(highlight);
+			switch (type) {
 				case 'array':
 					return this.getArrayRanges(input, highlight);
 				case 'function':
@@ -222,7 +233,7 @@
 					if (!highlight) {
 						return [];
 					} else {
-						throw 'Unrecognized highlight type';
+						throw 'Unrecognized highlight type: ' + type;
 					}
 			}
 		},
