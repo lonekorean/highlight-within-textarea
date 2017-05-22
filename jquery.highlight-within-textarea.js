@@ -199,8 +199,10 @@
 			boundaries.sort(function(a, b) {
 				if (a.index !== b.index) {
 					return b.index - a.index;
-				} else if (a.type === 'stop') {
+				} else if (a.type === 'stop' && b.type === 'start') {
 					return 1;
+				} else if (a.type === 'start' && b.type === 'stop') {
+					return -1;
 				} else {
 					return 0;
 				}
@@ -246,6 +248,16 @@
 
 		getFunctionRanges: function(input, func) {
 			return this.getRanges(input, func(input));
+		},
+
+		getStringRanges: function(input, string) {
+			var ranges = [];
+			var index = 0;
+			while(index = input.indexOf(string, index), index !== -1) {
+				ranges.push([index, index + string.length]);
+				index += string.length;
+			}
+			return ranges;
 		},
 
 		getRangeRanges: function(input, range) {
