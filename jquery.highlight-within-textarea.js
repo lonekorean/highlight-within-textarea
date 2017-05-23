@@ -153,69 +153,7 @@
 			var input = this.$el.val();
 			var ranges = this.getRanges(input, this.highlight);
 			var boundaries = this.getBoundaries(ranges);
-
 			this.renderMarks(boundaries);
-/*
-			// this keeps scrolling aligned when input ends with a newline
-			input = input.replace(new RegExp('\\n(' + CLOSE_MARK + ')?$'), '\n\n$1');
-
-			// escape HTML
-			input = input.replace(/&/g, '&amp;')
-					.replace(/</g, '&lt;')
-					.replace(/>/g, '&gt;');
-
-			// replace tokens with actual mark tags
-			input = input.replace(new RegExp(OPEN_MARK, 'g'), '<mark>');
-			input = input.replace(new RegExp(CLOSE_MARK, 'g'), '</mark>');
-
-			if (this.browser === 'ie') {
-				// IE wraps whitespace differently in a div vs textarea, this fixes it
-				input = input.replace(/ /g, ' <wbr>');
-			}
-
-			this.$highlights.html(input);
-*/
-		},
-
-		getBoundaries: function(ranges) {
-			var boundaries = [];
-			ranges.forEach(function(range) {
-				boundaries.push({
-					type: 'start',
-					index: range[0]
-				});
-				boundaries.push({
-					type: 'stop',
-					index: range[1]
-				});
-			});
-
-			this.sortBoundaries(boundaries);
-			return boundaries;
-		},
-
-		sortBoundaries: function(boundaries) {
-			// backwards sort (since marks are inserted right to left)
-			boundaries.sort(function(a, b) {
-				if (a.index !== b.index) {
-					return b.index - a.index;
-				} else if (a.type === 'stop' && b.type === 'start') {
-					return 1;
-				} else if (a.type === 'start' && b.type === 'stop') {
-					return -1;
-				} else {
-					return 0;
-				}
-			});
-		},
-
-		renderMarks: function(boundaries) {
-			var input = this.$el.val();
-			boundaries.forEach(function(boundary) {
-				var markup = boundary.type === 'start' ? '<mark>' : '</mark>';
-				input = input.slice(0, boundary.index) + markup + input.slice(boundary.index);
-			});
-			this.$highlights.html(input);
 		},
 
 		getRanges: function(input, highlight) {
@@ -277,6 +215,56 @@
 			return [range];
 		},
 
+		getBoundaries: function(ranges) {
+			var boundaries = [];
+			ranges.forEach(function(range) {
+				boundaries.push({
+					type: 'start',
+					index: range[0]
+				});
+				boundaries.push({
+					type: 'stop',
+					index: range[1]
+				});
+			});
+
+			this.sortBoundaries(boundaries);
+			return boundaries;
+		},
+
+		sortBoundaries: function(boundaries) {
+			// backwards sort (since marks are inserted right to left)
+			boundaries.sort(function(a, b) {
+				if (a.index !== b.index) {
+					return b.index - a.index;
+				} else if (a.type === 'stop' && b.type === 'start') {
+					return 1;
+				} else if (a.type === 'start' && b.type === 'stop') {
+					return -1;
+				} else {
+					return 0;
+				}
+			});
+		},
+
+		renderMarks: function(boundaries) {
+			var input = this.$el.val();
+			boundaries.forEach(function(boundary) {
+				var markup = boundary.type === 'start' ? '<mark>' : '</mark>';
+				input = input.slice(0, boundary.index) + markup + input.slice(boundary.index);
+			});
+
+			// this keeps scrolling aligned when input ends with a newline
+			input = input.replace(/\n(<\/mark>)?$/, '\n\n$1');
+
+			if (this.browser === 'ie') {
+				// IE wraps whitespace differently in a div vs textarea, this fixes it
+				input = input.replace(/ /g, ' <wbr>');
+			}
+
+			this.$highlights.html(input);
+		},
+
 		handleScroll: function() {
 			var scrollTop = this.$el.scrollTop();
 			this.$backdrop.scrollTop(scrollTop);
@@ -292,26 +280,6 @@
 		// container (despite the CSS), this immediately reverts the shift
 		blockContainerScroll: function(e) {
 			this.$container.scrollLeft(0);
-		},
-
-		markArray: function(input, payload) {
-			var offset = 0;
-			payload.forEach(function(element) {
-				// insert open tag
-				var open = element[0] + offset;
-				input = input.slice(0, open) + OPEN_MARK + input.slice(open);
-				offset += OPEN_MARK.length;
-
-				// insert close tag
-				var close = element[1] + offset;
-				input = input.slice(0, close) + CLOSE_MARK + input.slice(close);
-				offset += CLOSE_MARK.length;
-			}, this);
-			return input;
-		},
-
-		markRegExp: function(input, payload) {
-			return input.replace(payload, OPEN_MARK + '$&' + CLOSE_MARK);
 		},
 
 		destroy: function() {
