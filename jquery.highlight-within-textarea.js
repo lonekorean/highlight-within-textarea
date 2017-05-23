@@ -243,11 +243,24 @@
 		getArrayRanges: function(input, array) {
 			var ranges = array.map(this.getRanges.bind(this, input));
 			return Array.prototype.concat.apply([], ranges);
-
 		},
 
 		getFunctionRanges: function(input, func) {
 			return this.getRanges(input, func(input));
+		},
+
+		getRegExpRanges: function(input, regex) {
+			var ranges = [];
+			var match;
+			while (match = regex.exec(input), match !== null) {
+				ranges.push([match.index, match.index + match.toString().length]);
+				if (!regex.global) {
+					// non-global regexes do not increase lastIndex, causing an infinite while loop
+					// but in this case we can just break manually after the first match
+					break;
+				}
+			}
+			return ranges;
 		},
 
 		getStringRanges: function(input, string) {
