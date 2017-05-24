@@ -53,7 +53,7 @@
 				if (instance instanceof RegExp) {
 					return 'regexp';
 				} else if (instance.hasOwnProperty('highlight')) {
-					return 'highlight';
+					return 'custom';
 				}
 			} else if (type === 'function' || type === 'string') {
 				return type;
@@ -180,8 +180,8 @@
 			}
 		},
 
-		getArrayRanges: function(input, array) {
-			var ranges = array.map(this.getRanges.bind(this, input));
+		getArrayRanges: function(input, arr) {
+			var ranges = arr.map(this.getRanges.bind(this, input));
 			return Array.prototype.concat.apply([], ranges);
 		},
 
@@ -203,12 +203,12 @@
 			return ranges;
 		},
 
-		getStringRanges: function(input, string) {
+		getStringRanges: function(input, str) {
 			var ranges = [];
 			var index = 0;
-			while(index = input.indexOf(string, index), index !== -1) {
-				ranges.push([index, index + string.length]);
-				index += string.length;
+			while(index = input.indexOf(str, index), index !== -1) {
+				ranges.push([index, index + str.length]);
+				index += str.length;
 			}
 			return ranges;
 		},
