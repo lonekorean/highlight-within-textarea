@@ -171,6 +171,8 @@
 					return this.getStringRanges(input, highlight);
 				case 'range':
 					return this.getRangeRanges(input, highlight);
+				case 'custom':
+					return this.getCustomRanges(input, highlight);
 				default:
 					if (!highlight) {
 						return [];
@@ -217,6 +219,15 @@
 			return [range];
 		},
 
+		getCustomRanges: function(input, custom) {
+			var ranges = this.getRanges(input, custom.highlight);
+			ranges.forEach(function(range) {
+				// arrays are objects, so we can add properties directly to them
+				range.className = custom.className;
+			});
+			return ranges;
+		},
+
 		removeStaggeredRanges: function(ranges) {
 			var unstaggeredRanges = [];
 			ranges.forEach(function(range) {
@@ -237,7 +248,8 @@
 			ranges.forEach(function(range) {
 				boundaries.push({
 					type: 'start',
-					index: range[0]
+					index: range[0],
+					className: range.className
 				});
 				boundaries.push({
 					type: 'stop',
@@ -267,7 +279,14 @@
 		renderMarks: function(boundaries) {
 			var input = this.$el.val();
 			boundaries.forEach(function(boundary) {
-				var markup = boundary.type === 'start' ? '<mark>' : '</mark>';
+				var markup;
+				if (boundary.type === 'stop') {
+					markup = '</mark>';
+				} else if (boundary.className) {
+					markup = '<mark class="' + boundary.className + '">';
+				} else {
+					markup = '<mark>';
+				}
 				input = input.slice(0, boundary.index) + markup + input.slice(boundary.index);
 			});
 
