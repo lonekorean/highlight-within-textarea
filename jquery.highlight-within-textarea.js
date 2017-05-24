@@ -7,9 +7,6 @@
 
 (function($) {
 	var ID = 'hwt';
-	var NAME = 'highlight-within-textarea';
-	var OPEN_MARK = '--##HWT:OPEN##--';
-	var CLOSE_MARK = '--##HWT:CLOSE##--';
 
 	var HighlightWithinTextarea = function($el, config) {
 		this.init($el, config);
@@ -20,7 +17,7 @@
 			this.$el = $el;
 
 			if (config === undefined) {
-				throw NAME + ': config object not provided.';
+				this.throw('config object not provided');
 			}
 
 			// for backwards compatibility with v1
@@ -36,6 +33,10 @@
 			}
 
 			this.generate();
+		},
+
+		throw: function(message) {
+			throw 'highlight-within-textarea: ' + message;
 		},
 
 		getType: function(instance) {
@@ -152,7 +153,8 @@
 		handleInput: function() {
 			var input = this.$el.val();
 			var ranges = this.getRanges(input, this.highlight);
-			var boundaries = this.getBoundaries(ranges);
+			var unstaggeredRanges = this.removeStaggeredRanges(ranges);
+			var boundaries = this.getBoundaries(unstaggeredRanges);
 			this.renderMarks(boundaries);
 		},
 
@@ -173,7 +175,7 @@
 					if (!highlight) {
 						return [];
 					} else {
-						throw 'Unrecognized highlight type: ' + type;
+						this.throw('unrecognized highlight type');
 					}
 			}
 		},
@@ -213,6 +215,21 @@
 
 		getRangeRanges: function(input, range) {
 			return [range];
+		},
+
+		removeStaggeredRanges: function(ranges) {
+			var unstaggeredRanges = [];
+			ranges.forEach(function(range) {
+				var isStaggered = unstaggeredRanges.find(function(unstaggeredRange) {
+					var isStartInside = range[0] > unstaggeredRange[0] && range[0] < unstaggeredRange[1];
+					var isStopInside = range[1] > unstaggeredRange[0] && range[1] < unstaggeredRange[1];
+					return !!(isStartInside ^ isStopInside); // xor
+				});
+				if (!isStaggered) {
+					unstaggeredRanges.push(range);
+				}
+			});
+			return unstaggeredRanges;
 		},
 
 		getBoundaries: function(ranges) {
