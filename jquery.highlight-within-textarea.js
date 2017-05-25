@@ -21,7 +21,7 @@
 			}
 
 			// for backwards compatibility with v1
-			if (this.getType(config) === 'function') {
+			if (this.getType(config) !== 'other') {
 				config = { highlight: config };
 			}
 
@@ -221,10 +221,16 @@
 
 		getCustomRanges: function(input, custom) {
 			var ranges = this.getRanges(input, custom.highlight);
-			ranges.forEach(function(range) {
-				// arrays are objects, so we can add properties directly to them
-				range.className = custom.className;
-			});
+			if (custom.className) {
+				ranges.forEach(function(range) {
+					// arrays are objects, so we can add properties directly to them
+					if (range.className) {
+						range.className = custom.className + ' ' + range.className;
+					} else {
+						range.className = custom.className;
+					}
+				});
+			}
 			return ranges;
 		},
 
