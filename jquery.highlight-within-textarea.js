@@ -16,27 +16,17 @@
 		init: function($el, config) {
 			this.$el = $el;
 
-			if (config === undefined) {
-				this.throw('config object not provided');
-			}
-
-			// for backwards compatibility with v1
-			if (this.getType(config) !== 'other') {
+			// backwards compatibility with v1 (deprecated)
+			if (this.getType(config) === 'function') {
 				config = { highlight: config };
 			}
 
-			if (this.getType(config.hightlight) === 'array') {
-				this.hightlight = config.highlight;
+			if (this.getType(config) === 'custom') {
+				this.highlight = config;
+				this.generate();
 			} else {
-				// convert to single item array
-				this.highlight = [config.highlight];
+				console.error('valid config object not provided');
 			}
-
-			this.generate();
-		},
-
-		throw: function(message) {
-			throw 'highlight-within-textarea: ' + message;
 		},
 
 		getType: function(instance) {
@@ -87,6 +77,9 @@
 					this.fixIOS();
 					break;
 			}
+
+			// plugin function checks this for success
+			this.isGenerated = true;
 
 			// trigger input event to highlight any existing input
 			this.handleInput();
@@ -177,7 +170,7 @@
 					if (!highlight) {
 						return [];
 					} else {
-						this.throw('unrecognized highlight type');
+						console.error('unrecognized highlight type');
 					}
 			}
 		},
@@ -320,7 +313,7 @@
 
 		// in Chrome, page up/down in the textarea will shift stuff within the
 		// container (despite the CSS), this immediately reverts the shift
-		blockContainerScroll: function(e) {
+		blockContainerScroll: function() {
 			this.$container.scrollLeft(0);
 		},
 
@@ -335,17 +328,35 @@
 	};
 
 	// register the jQuery plugin
-	$.fn.highlightWithinTextarea = function(onInput) {
+	$.fn.highlightWithinTextarea = function(options) {
 		return this.each(function() {
 			var $this = $(this);
+			var plugin = $this.data(ID);
 
-			var highlightWithinTextarea = $this.data(ID);
-			if (highlightWithinTextarea) {
-				highlightWithinTextarea.destroy();
+			if (typeof options === 'string') {
+				if (plugin) {
+					switch (options) {
+						case 'update':
+							plugin.handleInput();
+							break;
+						case 'destroy':
+							plugin.destroy();
+							break;
+						default:
+							console.error('unrecognized method string');
+					}
+				} else {
+					console.error('plugin must be instantiated first');
+				}
+			} else {
+				if (plugin) {
+					plugin.destroy();
+				}
+				plugin = new HighlightWithinTextarea($this, options);
+				if (plugin.isGenerated) {
+					$this.data(ID, plugin);
+				}
 			}
-
-			highlightWithinTextarea = new HighlightWithinTextarea($this, onInput);
-			$this.data(ID, highlightWithinTextarea);
 		});
 	};
 })(jQuery);
