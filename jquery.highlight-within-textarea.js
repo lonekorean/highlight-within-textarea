@@ -6,9 +6,9 @@
  */
 
 (function($) {
-	var ID = 'hwt';
+	let ID = 'hwt';
 
-	var HighlightWithinTextarea = function($el, config) {
+	let HighlightWithinTextarea = function($el, config) {
 		this.init($el, config);
 	};
 
@@ -29,8 +29,9 @@
 			}
 		},
 
+		// returns identifier strings that aren't necessarily "real" JavaScript types
 		getType: function(instance) {
-			var type = typeof instance;
+			let type = typeof instance;
 			if (!instance) {
 				return 'falsey';
 			} else if (Array.isArray(instance)) {
@@ -85,10 +86,10 @@
 			this.handleInput();
 		},
 
-		// yeah, browser sniffing sucks, but there are browser-specific quirks
-		// to handle that are not a matter of feature detection
+		// browser sniffing sucks, but there are browser-specific quirks to handle
+		// that are not a matter of feature detection
 		detectBrowser: function() {
-			var ua = window.navigator.userAgent.toLowerCase();
+			let ua = window.navigator.userAgent.toLowerCase();
 			if (ua.indexOf('firefox') !== -1) {
 				return 'firefox';
 			} else if (!!ua.match(/msie|trident\/7|edge/)) {
@@ -101,15 +102,14 @@
 			}
 		},
 
-		// Firefox doesn't show text that scrolls into the padding of a
-		// textarea, so rearrange a couple box models to make highlights
-		// behave the same way
+		// Firefox doesn't show text that scrolls into the padding of a textarea, so
+		// rearrange a couple box models to make highlights behave the same way
 		fixFirefox: function() {
 			// take padding and border pixels from highlights div
-			var padding = this.$highlights.css([
+			let padding = this.$highlights.css([
 				'padding-top', 'padding-right', 'padding-bottom', 'padding-left'
 			]);
-			var border = this.$highlights.css([
+			let border = this.$highlights.css([
 				'border-top-width', 'border-right-width', 'border-bottom-width', 'border-left-width'
 			]);
 			this.$highlights.css({
@@ -134,8 +134,8 @@
 				});
 		},
 
-		// iOS adds 3px of (unremovable) padding to the left and right of a
-		// textarea, so adjust highlights div to match
+		// iOS adds 3px of (unremovable) padding to the left and right of a textarea,
+		// so adjust highlights div to match
 		fixIOS: function() {
 			this.$highlights.css({
 				'padding-left': '+=3px',
@@ -144,15 +144,15 @@
 		},
 
 		handleInput: function() {
-			var input = this.$el.val();
-			var ranges = this.getRanges(input, this.highlight);
-			var unstaggeredRanges = this.removeStaggeredRanges(ranges);
-			var boundaries = this.getBoundaries(unstaggeredRanges);
+			let input = this.$el.val();
+			let ranges = this.getRanges(input, this.highlight);
+			let unstaggeredRanges = this.removeStaggeredRanges(ranges);
+			let boundaries = this.getBoundaries(unstaggeredRanges);
 			this.renderMarks(boundaries);
 		},
 
 		getRanges: function(input, highlight) {
-			var type = this.getType(highlight);
+			let type = this.getType(highlight);
 			switch (type) {
 				case 'array':
 					return this.getArrayRanges(input, highlight);
@@ -168,6 +168,7 @@
 					return this.getCustomRanges(input, highlight);
 				default:
 					if (!highlight) {
+						// do nothing for falsey values
 						return [];
 					} else {
 						console.error('unrecognized highlight type');
@@ -176,7 +177,7 @@
 		},
 
 		getArrayRanges: function(input, arr) {
-			var ranges = arr.map(this.getRanges.bind(this, input));
+			let ranges = arr.map(this.getRanges.bind(this, input));
 			return Array.prototype.concat.apply([], ranges);
 		},
 
@@ -185,13 +186,13 @@
 		},
 
 		getRegExpRanges: function(input, regex) {
-			var ranges = [];
-			var match;
+			let ranges = [];
+			let match;
 			while (match = regex.exec(input), match !== null) {
 				ranges.push([match.index, match.index + match.toString().length]);
 				if (!regex.global) {
-					// non-global regexes do not increase lastIndex, causing an infinite while loop
-					// but in this case we can just break manually after the first match
+					// non-global regexes do not increase lastIndex, causing an infinite loop,
+					// but we can just break manually after the first match
 					break;
 				}
 			}
@@ -199,9 +200,9 @@
 		},
 
 		getStringRanges: function(input, str) {
-			var ranges = [];
-			var index = 0;
-			while(index = input.indexOf(str, index), index !== -1) {
+			let ranges = [];
+			let index = 0;
+			while (index = input.indexOf(str, index), index !== -1) {
 				ranges.push([index, index + str.length]);
 				index += str.length;
 			}
@@ -213,10 +214,10 @@
 		},
 
 		getCustomRanges: function(input, custom) {
-			var ranges = this.getRanges(input, custom.highlight);
+			let ranges = this.getRanges(input, custom.highlight);
 			if (custom.className) {
 				ranges.forEach(function(range) {
-					// arrays are objects, so we can add properties directly to them
+					// persist class name as a property of the array
 					if (range.className) {
 						range.className = custom.className + ' ' + range.className;
 					} else {
@@ -227,13 +228,14 @@
 			return ranges;
 		},
 
+		// prevent staggered overlaps (clean nesting is fine)
 		removeStaggeredRanges: function(ranges) {
-			var unstaggeredRanges = [];
+			let unstaggeredRanges = [];
 			ranges.forEach(function(range) {
-				var isStaggered = unstaggeredRanges.find(function(unstaggeredRange) {
-					var isStartInside = range[0] > unstaggeredRange[0] && range[0] < unstaggeredRange[1];
-					var isStopInside = range[1] > unstaggeredRange[0] && range[1] < unstaggeredRange[1];
-					return !!(isStartInside ^ isStopInside); // xor
+				let isStaggered = unstaggeredRanges.find(function(unstaggeredRange) {
+					let isStartInside = range[0] > unstaggeredRange[0] && range[0] < unstaggeredRange[1];
+					let isStopInside = range[1] > unstaggeredRange[0] && range[1] < unstaggeredRange[1];
+					return isStartInside !== isStopInside; // xor
 				});
 				if (!isStaggered) {
 					unstaggeredRanges.push(range);
@@ -243,7 +245,7 @@
 		},
 
 		getBoundaries: function(ranges) {
-			var boundaries = [];
+			let boundaries = [];
 			ranges.forEach(function(range) {
 				boundaries.push({
 					type: 'start',
@@ -276,9 +278,9 @@
 		},
 
 		renderMarks: function(boundaries) {
-			var input = this.$el.val();
+			let input = this.$el.val();
 			boundaries.forEach(function(boundary) {
-				var markup;
+				let markup;
 				if (boundary.type === 'stop') {
 					markup = '</mark>';
 				} else if (boundary.className) {
@@ -301,13 +303,13 @@
 		},
 
 		handleScroll: function() {
-			var scrollTop = this.$el.scrollTop();
+			let scrollTop = this.$el.scrollTop();
 			this.$backdrop.scrollTop(scrollTop);
 
 			// Chrome and Safari won't break long strings of spaces, which can cause
 			// horizontal scrolling, this compensates by shifting highlights by the
 			// horizontally scrolled amount to keep things aligned
-			var scrollLeft = this.$el.scrollLeft();
+			let scrollLeft = this.$el.scrollLeft();
 			this.$backdrop.css('transform', (scrollLeft > 0) ? 'translateX(' + -scrollLeft + 'px)' : '');
 		},
 
@@ -330,8 +332,8 @@
 	// register the jQuery plugin
 	$.fn.highlightWithinTextarea = function(options) {
 		return this.each(function() {
-			var $this = $(this);
-			var plugin = $this.data(ID);
+			let $this = $(this);
+			let plugin = $this.data(ID);
 
 			if (typeof options === 'string') {
 				if (plugin) {
