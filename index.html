@@ -11,7 +11,7 @@
 		<script src="jquery.highlight-within-textarea.js"></script>
 
 		<style>
-			@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700|Roboto+Mono);
+			@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700|Droid+Sans+Mono);
 
 			* {
 				box-sizing: border-box;
@@ -20,7 +20,7 @@
 			body {
 				max-width: 800px;
 				margin: 40px auto;
-				padding: 0 40px;
+				padding: 0 20px;
 				font: 18px/1.4 'Open Sans', sans-serif;
 				color: #495057;
 				background-color: #f1f3f5;
@@ -40,13 +40,21 @@
 				margin-top: 60px;
 			}
 
+			code {
+				padding: 0 5px;
+				font-family: 'Droid Sans Mono', sans-serif;
+				font-size: 16px;
+				background-color: #dee2e6;
+			}
+
 			script {
 				display: block;
 				margin-top: 10px;
 				padding-left: 15px;
-				border-left: 5px solid #ced4da;
+				border-left: 5px solid #adb5bd;
+				background-color: #e9ecef;
 				white-space: pre-wrap;
-				font: 14px/1.4 'Roboto Mono', sans-serif;
+				font: 14px/1.5 'Droid Sans Mono', sans-serif;
 			}
 
 			/* background and positioning */
@@ -56,12 +64,12 @@
 
 			/* size and formatting */
 			.hwt-content {
-				width: 600px;
+				width: 760px;
 				height: 100px;
 				padding: 20px;
-				border: 1px solid #ced4da;
+				border: 1px solid #adb5bd;
 				color: inherit;
-				font: 18px/25px 'Roboto Mono', sans-serif;
+				font: 18px/25px 'Droid Sans Mono', sans-serif;
 			}
 
 			/* focus */
@@ -89,7 +97,7 @@
 	</head>
 	<body>
 		<h1>Highlight Within Textarea</h1>
-		<p>Some demos and code snippets for using the plugin. Type stuff into textareas to see the real-time highlighting.</p>
+		<p>Some demos and code snippets for using the plugin. Edit textareas to see the real-time highlighting.</p>
 		<p>
 			<a href="https://github.com/lonekorean/highlight-within-textarea/tree/master">Go to GitHub repo</a>
 			<a href="https://www.npmjs.com/package/highlight-within-textarea">Go to npm package</a>
@@ -101,18 +109,18 @@
 			<textarea class="string-example">Potato potato tomato potato.</textarea>
 			<script>
 $('.string-example').highlightWithinTextarea({
-	highlight: 'potato'
+    highlight: 'potato'
 });
 			</script>
 		</section>
 
 		<section>
 			<h2>RegExp</h2>
-			<p>Don't forget the "g" (find all) and "i" (case-insensitive) flags if you need them.</p>
+			<p>Don't forget the <code>g</code> (find all) and <code>i</code> (case-insensitive) flags if you need them.</p>
 			<textarea class="regex-example">Dog, cat, chicken, goose. Dogs, cats, chickens, geese.</textarea>
 			<script>
 $('.regex-example').highlightWithinTextarea({
-	highlight: /dogs?|cats?|g(oo|ee)se/gi
+    highlight: /dogs?|cats?|g(oo|ee)se/gi
 });
 			</script>
 		</section>
@@ -123,7 +131,7 @@ $('.regex-example').highlightWithinTextarea({
 			<textarea class="range-example">abcdefgh</textarea>
 			<script>
 $('.range-example').highlightWithinTextarea({
-	highlight: [2, 6]
+    highlight: [2, 6]
 });
 			</script>
 		</section>
@@ -134,57 +142,57 @@ $('.range-example').highlightWithinTextarea({
 			<textarea class="array-example">apple watermelon banana orange mango</textarea>
 			<script>
 $('.array-example').highlightWithinTextarea({
-	highlight: [
-		'orange',
-		/ba(na)*/gi,
-		[0, 5]
-	]
+    highlight: [
+        'orange',
+        /ba(na)*/gi,
+        [0, 5]
+    ]
 });
 			</script>
 		</section>
 
 		<section>
 			<h2>Function</h2>
-			<p>You can use a function for custom logic. It can return any of the types mentioned here. Return something falsey (false, null, undefined, etc.) to indicate no highlighting. The current textarea input is provided to it for convenience.</p>
-			<textarea class="function-example">Sun Mon Tue Wed Thu Fri Sat :)</textarea>
+			<p>You can use a function for custom logic. It can return any of the types mentioned here. Return anything falsey (<code>false</code>, <code>undefined</code>, etc.) to indicate no highlighting. The current textarea input is provided to it for convenience.</p>
+			<textarea class="function-example">Sun Mon Tue Wed Thu Fri Sat :) &lt;-- remove the smiley...</textarea>
 			<script>
 function getSmileyDayString(input) {
-	const dayStrings = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-	if (input.indexOf(':)') !== -1) {
-		let dayIndex = (new Date()).getDay();
-		return dayStrings[dayIndex];
-	} else {
-		// no smiley, no highlighting
-		return false;
-	}
+    const dayStrings = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+    if (input.indexOf(':)') !== -1) {
+        let dayIndex = (new Date()).getDay();
+        return dayStrings[dayIndex];
+    } else {
+        // no smiley, no highlighting
+        return false;
+    }
 }
 
 $('.function-example').highlightWithinTextarea({
-	highlight: getSmileyDayString
+    highlight: getSmileyDayString
 });
 			</script>
 		</section>
 
 		<section>
-			<h2>Custom Objects (with CSS Classes)</h2>
-			<p>Any type mentioned here can be put in an object wrapper with highlight and className properties. This lets you set CSS classes in the highlight markup for custom styling, such as changing the highlight color.</p>
-			<textarea class="class-example">Here's a blueberry. There's a strawberry. Suprise, it's a banananana!</textarea>
+			<h2>Custom Object (with Class Name)</h2>
+			<p>Any type mentioned here can be put in an object wrapper with <code>highlight</code> and <code>className</code> properties. This lets you set CSS classes in the highlight markup for custom styling, such as changing the highlight color.</p>
+			<textarea class="class-example">Here's a blueberry. There's a strawberry. Surprise, it's a banananana!</textarea>
 			<script>
 $('.class-example').highlightWithinTextarea({
-	highlight: [
-		{
-			highlight: 'strawberry',
-			className: 'red'
-		},
-		{
-			highlight: 'blueberry',
-			className: 'blue'
-		},
-		{
-			highlight: /ba(na)*/gi,
-			className: 'yellow'
-		}
-	]
+    highlight: [
+        {
+            highlight: 'strawberry',
+            className: 'red'
+        },
+        {
+            highlight: 'blueberry',
+            className: 'blue'
+        },
+        {
+            highlight: /ba(na)*/gi,
+            className: 'yellow'
+        }
+    ]
 });
 			</script>
 		</section>
