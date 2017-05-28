@@ -4,32 +4,35 @@
 		<meta charset="utf-8">
 		<title>Highlight Within Textarea</title>
 
-		<!-- need jQuery, obviously -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 		<!-- highlight-within-textarea CSS/JS -->
-		<link href="./jquery.highlight-within-textarea.css" rel="stylesheet">
-		<script src="./jquery.highlight-within-textarea.js"></script>
+		<link href="jquery.highlight-within-textarea.css" rel="stylesheet">
+		<script src="jquery.highlight-within-textarea.js"></script>
 
-		<!-- make things pretty -->
 		<style>
 			@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700|Roboto+Mono);
 
+			* {
+				box-sizing: border-box;
+			}
+
 			body {
-				max-width: 900px;
+				max-width: 800px;
 				margin: 40px auto;
+				padding: 0 40px;
 				font: 18px/1.4 'Open Sans', sans-serif;
-				color: #555;
-				background-color: #eee;
+				color: #495057;
+				background-color: #f1f3f5;
 			}
 
 			a {
 				display: inline-block;
-				padding: 10px 20px;
-				border: 1px solid #fff;
-				border-radius: 10px;
-				color: #fff;
-				background-color: #777;
+				margin-bottom: 5px;
+				padding: 10px 30px;
+				border-radius: 5px;
+				color: #f8f9fa;
+				background-color: #495057;
 				text-decoration: none;
 			}
 
@@ -40,85 +43,149 @@
 			script {
 				display: block;
 				margin-top: 10px;
-				padding-left: 10px;
-				border-left: 8px solid #ccc;
+				padding-left: 15px;
+				border-left: 5px solid #ced4da;
 				white-space: pre-wrap;
 				font: 14px/1.4 'Roboto Mono', sans-serif;
 			}
 
 			/* background and positioning */
 			.hwt-container {
-				background-color: #fff;
+				background-color: #f8f9fa;
 			}
 
 			/* size and formatting */
 			.hwt-content {
-				width: 500px;
+				width: 600px;
 				height: 100px;
 				padding: 20px;
-				color: #555;
+				border: 1px solid #ced4da;
+				color: inherit;
 				font: 18px/25px 'Roboto Mono', sans-serif;
+			}
+
+			/* focus */
+			.hwt-input:focus {
+				outline-color: #495057;
 			}
 
 			/* highlights */
 			.hwt-content mark {
 				border-radius: 3px;
+				background-color: #d0bfff;
 			}
-			.hwt-content mark:nth-of-type(2n) {
-				background-color: #cfdeab;
+
+			/* used in the class name demo */
+			.hwt-content mark.red {
+				background-color: #ffc9c9;
 			}
-			.hwt-content mark:nth-of-type(2n+1) {
-				background-color: #b1d5e5;
+			.hwt-content mark.blue {
+				background-color: #a3daff;
+			}
+			.hwt-content mark.yellow {
+				background-color: #ffec99;
 			}
 		</style>
 	</head>
 	<body>
-		<p><a href="https://github.com/lonekorean/highlight-within-textarea/tree/master">Go to GitHub repo</a></p>
-
 		<h1>Highlight Within Textarea</h1>
-		<p>Some use cases with code snippets. The magic happens by providing an onInput callback to specify what to highlight. The following examples show how.</p>
+		<p>Some demos and code snippets for using the plugin. Type stuff into textareas to see the real-time highlighting.</p>
+		<p>
+			<a href="https://github.com/lonekorean/highlight-within-textarea/tree/master">Go to GitHub repo</a>
+			<a href="https://www.npmjs.com/package/highlight-within-textarea">Go to npm package</a>
+		</p>
 
 		<section>
-			<h2>Using Regex</h2>
-			<p>You can specify an onInput callback that returns a regex. Text matched by the regex will be highlighted. This example simply highlights all numbers.</p>
-			<textarea class="regex-example">1600 Pennsylvania Ave NW, Washington, DC 20500</textarea>
+			<h2>String</h2>
+			<p>Note that this is case-insensitive.</p>
+			<textarea class="string-example">Potato potato tomato potato.</textarea>
 			<script>
-function onInputRegex(input) {
-	return /\d+/g;
-}
-
-$('textarea.regex-example').highlightWithinTextarea(onInputRegex);
+$('.string-example').highlightWithinTextarea({
+	highlight: 'potato'
+});
 			</script>
 		</section>
 
 		<section>
-			<h2>Using Regex Again</h2>
-			<p>A common use case is to highlight from a list of 1 or more strings. This is easily done with regex. This example highlights certain country names.</p>
-			<textarea class="regex-again-example">There are about 5,000 potato varieties worldwide. Three thousand of them are found in the Andes alone, mainly in Peru, Bolivia, Ecuador, Chile, and Colombia.</textarea>
+			<h2>RegExp</h2>
+			<p>Don't forget the "g" (find all) and "i" (case-insensitive) flags if you need them.</p>
+			<textarea class="regex-example">Dog, cat, chicken, goose. Dogs, cats, chickens, geese.</textarea>
 			<script>
-function onInputRegexAgain(input) {
-	return /chile|ecuador|peru/gi;
-}
-
-$('textarea.regex-again-example').highlightWithinTextarea(onInputRegexAgain);
+$('.regex-example').highlightWithinTextarea({
+	highlight: /dogs?|cats?|g(oo|ee)se/gi
+});
 			</script>
 		</section>
 
 		<section>
-			<h2>Using Array</h2>
-			<p>The onInput callback can also return an array of arrays to specify highlights by character position. Each inner array has 2 values: a starting index (inclusive) and an ending index (exclusive). This example highlights the first 10 characters and the last 10 characters, as long as there are enough characters to do so.</p>
-			<textarea class="array-example">Bears are mammals of the family Ursidae.</textarea>
+			<h2>Array of Two Numbers (Range)</h2>
+			<p>An array of exactly two numbers is treated as a range. Highlighting starts at the first character index (inclusive) and ends at the second character index (exclusive).</p>
+			<textarea class="range-example">abcdefgh</textarea>
 			<script>
-function onInputArray(input) {
-	var length = input.length;
-	if (length >= 20) {
-		return [[0, 10], [length - 10, length]];
+$('.range-example').highlightWithinTextarea({
+	highlight: [2, 6]
+});
+			</script>
+		</section>
+
+		<section>
+			<h2>Array of Other Things</h2>
+			<p>You can highlight multiple things, using any types mentioned here, with an array.</p>
+			<textarea class="array-example">apple watermelon banana orange mango</textarea>
+			<script>
+$('.array-example').highlightWithinTextarea({
+	highlight: [
+		'orange',
+		/ba(na)*/gi,
+		[0, 5]
+	]
+});
+			</script>
+		</section>
+
+		<section>
+			<h2>Function</h2>
+			<p>You can use a function for custom logic. It can return any of the types mentioned here. Return something falsey (false, null, undefined, etc.) to indicate no highlighting. The current textarea input is provided to it for convenience.</p>
+			<textarea class="function-example">Sun Mon Tue Wed Thu Fri Sat :)</textarea>
+			<script>
+function getSmileyDayString(input) {
+	const dayStrings = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+	if (input.indexOf(':)') !== -1) {
+		let dayIndex = (new Date()).getDay();
+		return dayStrings[dayIndex];
 	} else {
-		return [];
+		// no smiley, no highlighting
+		return false;
 	}
 }
 
-$('textarea.array-example').highlightWithinTextarea(onInputArray);
+$('.function-example').highlightWithinTextarea({
+	highlight: getSmileyDayString
+});
+			</script>
+		</section>
+
+		<section>
+			<h2>Custom Objects (with CSS Classes)</h2>
+			<p>Any type mentioned here can be put in an object wrapper with highlight and className properties. This lets you set CSS classes in the highlight markup for custom styling, such as changing the highlight color.</p>
+			<textarea class="class-example">Here's a blueberry. There's a strawberry. Suprise, it's a banananana!</textarea>
+			<script>
+$('.class-example').highlightWithinTextarea({
+	highlight: [
+		{
+			highlight: 'strawberry',
+			className: 'red'
+		},
+		{
+			highlight: 'blueberry',
+			className: 'blue'
+		},
+		{
+			highlight: /ba(na)*/gi,
+			className: 'yellow'
+		}
+	]
+});
 			</script>
 		</section>
 	</body>
