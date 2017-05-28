@@ -201,10 +201,12 @@
 
 		getStringRanges: function(input, str) {
 			let ranges = [];
+			let inputLower = input.toLowerCase();
+			let strLower = str.toLowerCase();
 			let index = 0;
-			while (index = input.indexOf(str, index), index !== -1) {
-				ranges.push([index, index + str.length]);
-				index += str.length;
+			while (index = inputLower.indexOf(strLower, index), index !== -1) {
+				ranges.push([index, index + strLower.length]);
+				index += strLower.length;
 			}
 			return ranges;
 		},
