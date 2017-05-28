@@ -189,7 +189,7 @@
 			let ranges = [];
 			let match;
 			while (match = regex.exec(input), match !== null) {
-				ranges.push([match.index, match.index + match.toString().length]);
+				ranges.push([match.index, match.index + match[0].length]);
 				if (!regex.global) {
 					// non-global regexes do not increase lastIndex, causing an infinite loop,
 					// but we can just break manually after the first match
