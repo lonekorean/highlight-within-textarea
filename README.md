@@ -10,14 +10,15 @@ A native textarea element is used and familiar behavior (auto-correct, scrolling
 
 ## Usage
 
+To start, call `highlightWithinTextarea()` on a textarea, passing in a config object.
 
 ```javascript
 $('.my-textarea').highlightWithinTextarea({
-    highlight: whatever
+    highlight: whatever // string, regexp, array, function, or custom object
 });
 ```
 
-The `highlight` property accepts all sorts of values to describe what will be highlighted. You can see the various ways to highlight things, along with example code, on **[the demo page](http://lonekorean.github.io/highlight-within-textarea/)**.
+The `highlight` property accepts several different types of values to describe what will be highlighted. You can see the various ways to highlight things, along with example code, on **[the demo page](http://lonekorean.github.io/highlight-within-textarea/)**.
 
 ## Styling
 
@@ -64,7 +65,7 @@ $('.my-textarea').highlightWithinTextarea('update');
 
 ## Destroying
 
-You can remove the plugin from a textarea with this:
+You can remove the plugin from a textarea with this.
 
 ```javascript
 $('.my-textarea').highlightWithinTextarea('destroy');
