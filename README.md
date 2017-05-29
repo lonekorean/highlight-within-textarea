@@ -10,9 +10,13 @@ A native textarea element is used and familiar behavior (auto-correct, scrolling
 
 ## Usage
 
-Make sure you reference both the CSS and the JS files on your page.
 
-See live demos with example code for various use cases on **[the demo page](http://lonekorean.github.io/highlight-within-textarea/)**.
+```javascript
+    highlight: whatever
+})
+```
+
+The `highlight` property accepts all sorts of values to describe what will be highlighted. You can see the various ways to highlight things, along with example code, on **[the demo page](http://lonekorean.github.io/highlight-within-textarea/)**.
 
 ## Styling
 
