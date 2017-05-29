@@ -12,8 +12,9 @@ A native textarea element is used and familiar behavior (auto-correct, scrolling
 
 
 ```javascript
+$('.my-textarea').highlightWithinTextarea({
     highlight: whatever
-})
+});
 ```
 
 The `highlight` property accepts all sorts of values to describe what will be highlighted. You can see the various ways to highlight things, along with example code, on **[the demo page](http://lonekorean.github.io/highlight-within-textarea/)**.
