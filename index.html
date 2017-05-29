@@ -4,15 +4,52 @@
 		<meta charset="utf-8">
 		<title>Highlight Within Textarea</title>
 
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Droid+Sans+Mono" rel="stylesheet">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 		<!-- highlight-within-textarea CSS/JS -->
 		<link href="jquery.highlight-within-textarea.css" rel="stylesheet">
 		<script src="jquery.highlight-within-textarea.js"></script>
 
+		<!-- custom styles for highlight-within-textarea -->
 		<style>
-			@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700|Droid+Sans+Mono);
+			.hwt-container {
+				background-color: #f8f9fa;
+			}
 
+			.hwt-content {
+				width: 760px;
+				height: 100px;
+				padding: 20px;
+				border: 1px solid #adb5bd;
+				color: inherit;
+				font: 18px/25px 'Droid Sans Mono', sans-serif;
+			}
+
+			.hwt-input:focus {
+				outline-color: #495057;
+			}
+
+			.hwt-content mark {
+				border-radius: 3px;
+				background-color: #d0bfff;
+			}
+
+			.hwt-content mark.red {
+				background-color: #ffc9c9;
+			}
+
+			.hwt-content mark.blue {
+				background-color: #a3daff;
+			}
+
+			.hwt-content mark.yellow {
+				background-color: #ffec99;
+			}
+		</style>
+
+		<!-- general styles to make this page look decent -->
+		<style>
 			* {
 				box-sizing: border-box;
 			}
@@ -56,48 +93,11 @@
 				white-space: pre-wrap;
 				font: 14px/1.5 'Droid Sans Mono', sans-serif;
 			}
-
-			/* background and positioning */
-			.hwt-container {
-				background-color: #f8f9fa;
-			}
-
-			/* size and formatting */
-			.hwt-content {
-				width: 760px;
-				height: 100px;
-				padding: 20px;
-				border: 1px solid #adb5bd;
-				color: inherit;
-				font: 18px/25px 'Droid Sans Mono', sans-serif;
-			}
-
-			/* focus */
-			.hwt-input:focus {
-				outline-color: #495057;
-			}
-
-			/* highlights */
-			.hwt-content mark {
-				border-radius: 3px;
-				background-color: #d0bfff;
-			}
-
-			/* used in the class name demo */
-			.hwt-content mark.red {
-				background-color: #ffc9c9;
-			}
-			.hwt-content mark.blue {
-				background-color: #a3daff;
-			}
-			.hwt-content mark.yellow {
-				background-color: #ffec99;
-			}
 		</style>
 	</head>
 	<body>
 		<h1>Highlight Within Textarea</h1>
-		<p>Some demos and code snippets for using the plugin. Edit textareas to see the real-time highlighting.</p>
+		<p>Some demos and code snippets for using the plugin. Edit textareas to see the real-time highlighting. View page source to see the CSS.</p>
 		<p>
 			<a href="https://github.com/lonekorean/highlight-within-textarea/tree/master">Go to GitHub repo</a>
 			<a href="https://www.npmjs.com/package/highlight-within-textarea">Go to npm package</a>
