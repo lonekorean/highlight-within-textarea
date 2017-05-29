@@ -234,7 +234,7 @@
 		removeStaggeredRanges: function(ranges) {
 			let unstaggeredRanges = [];
 			ranges.forEach(function(range) {
-				let isStaggered = unstaggeredRanges.find(function(unstaggeredRange) {
+				let isStaggered = unstaggeredRanges.some(function(unstaggeredRange) {
 					let isStartInside = range[0] > unstaggeredRange[0] && range[0] < unstaggeredRange[1];
 					let isStopInside = range[1] > unstaggeredRange[0] && range[1] < unstaggeredRange[1];
 					return isStartInside !== isStopInside; // xor
