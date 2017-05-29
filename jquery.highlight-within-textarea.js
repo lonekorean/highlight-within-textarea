@@ -297,8 +297,10 @@
 			input = input.replace(/\n(<\/mark>)?$/, '\n\n$1');
 
 			if (this.browser === 'ie') {
-				// IE wraps whitespace differently in a div vs textarea, this fixes it
-				input = input.replace(/ /g, ' <wbr>');
+				// IE/Edge wraps whitespace differently in a div vs textarea, this fixes it
+				input = input
+					.replace(/ /g, ' <wbr>')
+					.replace(/<mark <wbr>/g, '<mark ');
 			}
 
 			this.$highlights.html(input);
