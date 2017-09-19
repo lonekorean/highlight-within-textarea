@@ -7,6 +7,8 @@
 
 (function($) {
 	let ID = 'hwt';
+	
+	let matchHtmlRegExp = /["'&<>]/;
 
 	let HighlightWithinTextarea = function($el, config) {
 		this.init($el, config);
@@ -278,9 +280,80 @@
 				}
 			});
 		},
+		
+		escapeHtml: function(str) { // function base on https://github.com/component/escape-html/blob/master/index.js
+            let match = matchHtmlRegExp.exec(str);
+
+            if (!match) {
+                return str;
+            }
+
+            let escape;
+            let html = '';
+            let index = 0;
+            let lastIndex = 0;
+
+            for (index = match.index; index < str.length; index++) {
+                switch (str.charCodeAt(index)) {
+                    case 34: // "
+                        escape = '&quot;';
+                        break;
+                    case 38: // &
+                        escape = '&amp;';
+                        break;
+                    case 39: // '
+                        escape = '&#39;';
+                        break;
+                    case 60: // <
+                        let htmlStr = str.substring(index, index + 6);
+                        if (htmlStr === '<mark>') {
+                            index += 5;
+                            continue;
+                        }
+                        htmlStr = str.substring(index, index + 13);
+                        if (htmlStr === '<mark class="') {
+                            let pos = str.indexOf('>', index + 13);
+                            if (pos > 0) {
+                                index = pos;
+                            } else {
+                                index = str.length;
+                            }
+                            continue;
+                        }
+                        htmlStr = str.substring(index, index + 7);
+                        if (htmlStr === '</mark>') {
+                            index += 6;
+                            continue;
+                        }
+                        escape = '&lt;';
+                        break;
+                    case 62: // >
+                        escape = '&gt;';
+                        break;
+                    default:
+                        continue;
+                }
+
+                if (lastIndex !== index) {
+                    html += str.substring(lastIndex, index);
+                }
+
+                lastIndex = index + 1;
+                html += escape;
+            }
+
+            return lastIndex !== index
+                ? html + str.substring(lastIndex, index)
+                : html;
+        },
 
 		renderMarks: function(boundaries) {
 			let input = this.$el.val();
+			if (!input || 0 === input.length) {
+                this.$highlights.html('');
+                return;
+			}
+			
 			boundaries.forEach(function(boundary) {
 				let markup;
 				if (boundary.type === 'stop') {
@@ -292,6 +365,8 @@
 				}
 				input = input.slice(0, boundary.index) + markup + input.slice(boundary.index);
 			});
+			
+			input = this.escapeHtml(input);
 
 			// this keeps scrolling aligned when input ends with a newline
 			input = input.replace(/\n(<\/mark>)?$/, '\n\n$1');
