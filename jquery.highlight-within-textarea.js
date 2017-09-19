@@ -147,6 +147,7 @@
 
 		handleInput: function() {
 			let input = this.$el.val();
+			input = input.replace(/(?:\r\n|\r)/g, '\n');
 			let ranges = this.getRanges(input, this.highlight);
 			let unstaggeredRanges = this.removeStaggeredRanges(ranges);
 			let boundaries = this.getBoundaries(unstaggeredRanges);
@@ -354,6 +355,8 @@
                 return;
 			}
 			
+			input = input.replace(/(?:\r\n|\r)/g, '\n');
+			
 			boundaries.forEach(function(boundary) {
 				let markup;
 				if (boundary.type === 'stop') {
@@ -369,7 +372,9 @@
 			input = this.escapeHtml(input);
 
 			// this keeps scrolling aligned when input ends with a newline
-			input = input.replace(/\n(<\/mark>)?$/, '\n\n$1');
+			input = input + '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n'; // FIX-ME: calc newline count from textarea width line
+			
+			input = input.replace('\n', '<br/>');
 
 			if (this.browser === 'ie') {
 				// IE/Edge wraps whitespace differently in a div vs textarea, this fixes it
