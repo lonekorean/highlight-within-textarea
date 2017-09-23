@@ -281,27 +281,39 @@
 
 		renderMarks: function(boundaries) {
 			let input = this.$el.val();
-			boundaries.forEach(function(boundary) {
+			boundaries.forEach(function(boundary, index) {
 				let markup;
-				if (boundary.type === 'stop') {
-					markup = '</mark>';
-				} else if (boundary.className) {
-					markup = '<mark class="' + boundary.className + '">';
+				if (boundary.type === 'start') {
+					markup = '{{hwt-mark-start|' + index + '}}';
 				} else {
-					markup = '<mark>';
+					markup = '{{hwt-mark-stop}}';
 				}
 				input = input.slice(0, boundary.index) + markup + input.slice(boundary.index);
 			});
 
 			// this keeps scrolling aligned when input ends with a newline
-			input = input.replace(/\n(<\/mark>)?$/, '\n\n$1');
+			input = input.replace(/\n(\{\{hwt-mark-stop\}\})?$/, '\n\n$1');
+
+			// encode HTML entities
+			input = input.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 			if (this.browser === 'ie') {
 				// IE/Edge wraps whitespace differently in a div vs textarea, this fixes it
-				input = input
-					.replace(/ /g, ' <wbr>')
-					.replace(/<mark <wbr>/g, '<mark ');
+				input = input.replace(/ /g, ' <wbr>')
 			}
+
+			// replace start tokens with opening <mark> tags with class name
+			input = input.replace(/\{\{hwt-mark-start\|(\d+)\}\}/g, function(match, submatch) {
+				var className = boundaries[+submatch].className;
+				if (className) {
+					return '<mark class="' + className + '">';
+				} else {
+					return '<mark>';
+				}
+			});
+
+			// replace stop tokens with closing </mark> tags
+			input = input.replace(/\{\{hwt-mark-stop\}\}/g, '</mark>');
 
 			this.$highlights.html(input);
 		},
