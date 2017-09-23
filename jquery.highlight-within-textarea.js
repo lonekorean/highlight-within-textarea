@@ -299,7 +299,7 @@
 
 			if (this.browser === 'ie') {
 				// IE/Edge wraps whitespace differently in a div vs textarea, this fixes it
-				input = input.replace(/ /g, ' <wbr>')
+				input = input.replace(/ /g, ' <wbr>');
 			}
 
 			// replace start tokens with opening <mark> tags with class name
