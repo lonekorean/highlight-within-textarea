@@ -53,18 +53,50 @@
 			return 'other';
 		},
 
+		getHighlightsDivCssFix: function(currentTextarea) {
+			const textareaStyle = window.getComputedStyle(currentTextarea);
+			return {
+				'font-size': textareaStyle.getPropertyValue('font-size'),
+				'font-family': textareaStyle.getPropertyValue('font-family'),
+				'line-height': textareaStyle.getPropertyValue('line-height'),
+				'padding': textareaStyle.getPropertyValue('padding')
+			};
+		},
+
+		getBackdropDivCssFix: function(currentTextarea) {
+			const textareaStyle = window.getComputedStyle(currentTextarea);
+			return {
+				'background-color': textareaStyle.getPropertyValue('background-color')
+			};
+		},
+
+		getContainerDivCssFix: function(currentTextarea) {
+			const textareaStyle = window.getComputedStyle(currentTextarea);
+			return {
+				'margin': textareaStyle.getPropertyValue('margin')
+			};
+		},
+
 		generate: function() {
+			// First save styles from existing textarea element
+			const highlightsDivCssFix = this.getHighlightsDivCssFix(this.$el.get(0));
+			const backdropDivCssFix = this.getBackdropDivCssFix(this.$el.get(0));
+			const containerDivCssFix = this.getContainerDivCssFix(this.$el.get(0));
+
 			this.$el
 				.addClass(ID + '-input ' + ID + '-content')
 				.on('input.' + ID, this.handleInput.bind(this))
 				.on('scroll.' + ID, this.handleScroll.bind(this));
 
-			this.$highlights = $('<div>', { class: ID + '-highlights ' + ID + '-content' });
+			this.$highlights = $('<div>', { class: ID + '-highlights ' + ID + '-content' })
+				.css(highlightsDivCssFix);
 
 			this.$backdrop = $('<div>', { class: ID + '-backdrop' })
+				.css(backdropDivCssFix)
 				.append(this.$highlights);
 
 			this.$container = $('<div>', { class: ID + '-container' })
+				.css(containerDivCssFix)
 				.insertAfter(this.$el)
 				.append(this.$backdrop, this.$el) // moves $el into $container
 				.on('scroll', this.blockContainerScroll.bind(this));
