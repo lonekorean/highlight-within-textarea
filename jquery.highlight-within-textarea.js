@@ -339,7 +339,7 @@
 			this.$backdrop.remove();
 			this.$el
 				.unwrap()
-				.removeClass(ID + '-text ' + ID + '-input')
+				.removeClass(ID + '-content ' + ID + '-input')
 				.off(ID)
 				.removeData(ID);
 		},
