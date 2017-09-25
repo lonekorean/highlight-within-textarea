@@ -30,7 +30,6 @@
 	display: block !important;
 	position: relative !important;
 	margin: 0 !important;
-	border-radius: 0;
 	overflow-x: hidden !important;
 	overflow-y: auto !important;
 }

@@ -36,16 +36,6 @@ Use for visibility, positioning, and background.
 - `margin`
 - `background`
 
-### .hwt-content
-
-Use for sizing and text formatting.
-- `width`
-- `height`
-- `padding`
-- `border`
-- `color`
-- `font`
-
 ### .hwt-content mark
 
 Use for highlighted text. Generally, stuff that doesn't change size is fine.
@@ -54,6 +44,8 @@ Use for highlighted text. Generally, stuff that doesn't change size is fine.
 - `box-shadow`
 
 Changes to `color` won't be visible, since text in the textarea covers colored text in the highlights.
+
+Feel free to style your actual `textarea` element as you like.
 
 ## Updating
 

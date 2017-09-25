@@ -53,25 +53,24 @@
 			return 'other';
 		},
 
-		getHighlightsDivCssFix: function(currentTextarea) {
-			const textareaStyle = window.getComputedStyle(currentTextarea);
+		getHighlightsDivCssFix: function(textareaStyle) {
 			return {
 				'font-size': textareaStyle.getPropertyValue('font-size'),
 				'font-family': textareaStyle.getPropertyValue('font-family'),
 				'line-height': textareaStyle.getPropertyValue('line-height'),
-				'padding': textareaStyle.getPropertyValue('padding')
+				'letter-spacing': textareaStyle.getPropertyValue('letter-spacing'),
+				'padding': textareaStyle.getPropertyValue('padding'),
+				'border': textareaStyle.getPropertyValue('border')
 			};
 		},
 
-		getBackdropDivCssFix: function(currentTextarea) {
-			const textareaStyle = window.getComputedStyle(currentTextarea);
+		getBackdropDivCssFix: function(textareaStyle) {
 			return {
 				'background-color': textareaStyle.getPropertyValue('background-color')
 			};
 		},
 
-		getContainerDivCssFix: function(currentTextarea) {
-			const textareaStyle = window.getComputedStyle(currentTextarea);
+		getContainerDivCssFix: function(textareaStyle) {
 			return {
 				'margin': textareaStyle.getPropertyValue('margin')
 			};
@@ -79,9 +78,10 @@
 
 		generate: function() {
 			// First save styles from existing textarea element
-			const highlightsDivCssFix = this.getHighlightsDivCssFix(this.$el.get(0));
-			const backdropDivCssFix = this.getBackdropDivCssFix(this.$el.get(0));
-			const containerDivCssFix = this.getContainerDivCssFix(this.$el.get(0));
+			const textareaStyle = window.getComputedStyle(this.$el.get(0));
+			const highlightsDivCssFix = this.getHighlightsDivCssFix(textareaStyle);
+			const backdropDivCssFix = this.getBackdropDivCssFix(textareaStyle);
+			const containerDivCssFix = this.getContainerDivCssFix(textareaStyle);
 
 			this.$el
 				.addClass(ID + '-input ' + ID + '-content')
