@@ -59,8 +59,11 @@
 				'font-family': textareaStyle.getPropertyValue('font-family'),
 				'line-height': textareaStyle.getPropertyValue('line-height'),
 				'letter-spacing': textareaStyle.getPropertyValue('letter-spacing'),
-				'padding': textareaStyle.getPropertyValue('padding'),
-				'border': textareaStyle.getPropertyValue('border')
+				'border': textareaStyle.getPropertyValue('border'),
+				'padding-top': textareaStyle.getPropertyValue('padding-top'),
+				'padding-right': textareaStyle.getPropertyValue('padding-right'),
+				'padding-bottom': textareaStyle.getPropertyValue('padding-bottom'),
+				'padding-left': textareaStyle.getPropertyValue('padding-left'),
 			};
 		},
 
@@ -72,7 +75,10 @@
 
 		getContainerDivCssFix: function(textareaStyle) {
 			return {
-				'margin': textareaStyle.getPropertyValue('margin')
+				'margin-top': textareaStyle.getPropertyValue('margin-top'),
+				'margin-right': textareaStyle.getPropertyValue('margin-right'),
+				'margin-bottom': textareaStyle.getPropertyValue('margin-bottom'),
+				'margin-left': textareaStyle.getPropertyValue('margin-left')
 			};
 		},
 
