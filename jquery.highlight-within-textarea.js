@@ -189,7 +189,13 @@
 			let ranges = [];
 			let match;
 			while (match = regex.exec(input), match !== null) {
-				ranges.push([match.index, match.index + match[0].length]);
+				if (match[1]) {
+					let groupStartIndex = match.index + match[0].indexOf(match[1]);
+					let groupEndIndex = groupStartIndex + match[1].length;
+					ranges.push([groupStartIndex, groupEndIndex]);
+				} else {
+					ranges.push([match.index, match.index + match[0].length]);
+				}
 				if (!regex.global) {
 					// non-global regexes do not increase lastIndex, causing an infinite loop,
 					// but we can just break manually after the first match
