@@ -82,15 +82,32 @@
 			};
 		},
 
+		getTextareaCssFix: function(textareaStyle) {
+			return {
+				'width': textareaStyle.getPropertyValue('width'),
+				'height': textareaStyle.getPropertyValue('height')
+			};
+		},
+
+		getTextareaCssFixReversed: function() {
+			/* Used to remove the fixed applied width and height properties */
+			return {
+				'width': "",
+				'height': ""
+			};
+		},
+
 		generate: function() {
 			// First save styles from existing textarea element
 			const textareaStyle = window.getComputedStyle(this.$el.get(0));
 			const highlightsDivCssFix = this.getHighlightsDivCssFix(textareaStyle);
 			const backdropDivCssFix = this.getBackdropDivCssFix(textareaStyle);
 			const containerDivCssFix = this.getContainerDivCssFix(textareaStyle);
+			const textareaCssFix = this.getTextareaCssFix(textareaStyle);
 
 			this.$el
 				.addClass(ID + '-input ' + ID + '-content')
+				.css(textareaCssFix)
 				.on('input.' + ID, this.handleInput.bind(this))
 				.on('scroll.' + ID, this.handleScroll.bind(this));
 
@@ -375,9 +392,11 @@
 
 		destroy: function() {
 			this.$backdrop.remove();
+			const textareaCssFixReversed = this.getTextareaCssFixReversed();
 			this.$el
 				.unwrap()
 				.removeClass(ID + '-content ' + ID + '-input')
+				.css(textareaCssFixReversed)
 				.off(ID)
 				.removeData(ID);
 		},
