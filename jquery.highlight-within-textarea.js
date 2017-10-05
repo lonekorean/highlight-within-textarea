@@ -83,18 +83,34 @@
 		},
 
 		getTextareaCssFix: function(textareaStyle) {
-			return {
-				'width': textareaStyle.getPropertyValue('width'),
-				'height': textareaStyle.getPropertyValue('height')
-			};
+			// Percent-based width and height will result in different values,
+			// 	so we should fix the computed width and height (unless already set,
+			//	which would later break resizable areas after plugin 'destroy' event)
+			const cssFix = {};
+			const elementStyle = this.$el.get(0).style;
+			if (!elementStyle.width) {
+				cssFix.width = textareaStyle.getPropertyValue('width');
+				this.$el.data('fix-width', true);
+			}
+			if (!elementStyle.height) {
+				cssFix.height = textareaStyle.getPropertyValue('height');
+				this.$el.data('fix-height', true);
+			}
+			return cssFix;
 		},
 
 		getTextareaCssFixReversed: function() {
 			/* Used to remove the fixed applied width and height properties */
-			return {
-				'width': "",
-				'height': ""
-			};
+			const cssFix = {};
+			if (this.$el.data('fix-width')) {
+				cssFix.width = ""; // unset
+				this.$el.removeData('fix-width');
+			}
+			if (this.$el.data('fix-height')) {
+				cssFix.height = ""; // unset
+				this.$el.removeData('fix-height');
+			}
+			return cssFix;
 		},
 
 		generate: function() {
