@@ -86,14 +86,25 @@
 			// Percent-based width and height will result in different values,
 			// 	so we should fix the computed width and height (unless already set,
 			//	which would later break resizable areas after plugin 'destroy' event)
+			// This value also needs to include the possibility of a scrollbar
 			const cssFix = {};
 			const elementStyle = this.$el.get(0).style;
 			if (!elementStyle.width) {
-				cssFix.width = textareaStyle.getPropertyValue('width');
+				const width = parseInt(textareaStyle.getPropertyValue('width'), 10);
+				const borderLeftWidth = parseInt(textareaStyle.getPropertyValue('border-left-width'), 10);
+				const borderRightWidth = parseInt(textareaStyle.getPropertyValue('border-right-width'), 10);
+				const scrollBarWidth = (this.$el.get(0).offsetWidth -
+					this.$el.get(0).clientWidth - borderLeftWidth - borderRightWidth);
+				cssFix.width = (width + scrollBarWidth) + 'px';
 				this.$el.data('fix-width', true);
 			}
 			if (!elementStyle.height) {
-				cssFix.height = textareaStyle.getPropertyValue('height');
+				const height = parseInt(textareaStyle.getPropertyValue('height'), 10);
+				const borderTopWidth = parseInt(textareaStyle.getPropertyValue('border-top-width'), 10);
+				const borderBottomWidth = parseInt(textareaStyle.getPropertyValue('border-bottom-width'), 10);
+				const scrollBarHeight = (this.$el.get(0).offsetHeight -
+					this.$el.get(0).clientHeight - borderTopWidth - borderBottomWidth);
+				cssFix.height = (height + scrollBarHeight) + 'px';
 				this.$el.data('fix-height', true);
 			}
 			return cssFix;
