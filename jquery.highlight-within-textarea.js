@@ -69,7 +69,8 @@
 
 		getBackdropDivCssFix: function(textareaStyle) {
 			return {
-				'background-color': textareaStyle.getPropertyValue('background-color')
+				'background-color': textareaStyle.getPropertyValue('background-color'),
+				'margin': '0px'
 			};
 		},
 
