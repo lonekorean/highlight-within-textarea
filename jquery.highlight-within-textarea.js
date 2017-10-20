@@ -57,6 +57,7 @@
 			return {
 				'font-size': textareaStyle.getPropertyValue('font-size'),
 				'font-family': textareaStyle.getPropertyValue('font-family'),
+				'font-weight': textareaStyle.getPropertyValue('font-weight'),
 				'line-height': textareaStyle.getPropertyValue('line-height'),
 				'letter-spacing': textareaStyle.getPropertyValue('letter-spacing'),
 				'border': textareaStyle.getPropertyValue('border'),
