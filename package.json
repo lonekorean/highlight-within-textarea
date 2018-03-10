@@ -1,6 +1,6 @@
 {
   "name": "highlight-within-textarea",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "jQuery plugin for highlighting bits of text within a textarea.",
   "main": "jquery.highlight-within-textarea.js",
   "repository": "https://github.com/lonekorean/highlight-within-textarea.git",
@@ -11,6 +11,6 @@
     "textarea",
     "search"
   ],
-  "author": "Will Boyd <will@codersblock.com> (http://codersblock.com)",
+  "author": "Will Boyd <will@codersblock.com> (https://codersblock.com)",
   "license": "MIT"
 }
