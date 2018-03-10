@@ -18,11 +18,11 @@ $('.my-textarea').highlightWithinTextarea({
 });
 ```
 
-The `highlight` property accepts several different types of values to describe what will be highlighted. You can see the various ways to highlight things, along with example code, on **[the demo page](http://lonekorean.github.io/highlight-within-textarea/)**.
+The `highlight` property accepts several different types of values to describe what will be highlighted. You can see the various ways to highlight things, along with example code, on **[the demo page](https://lonekorean.github.io/highlight-within-textarea/)**.
 
 ## Styling
 
-For reference, **[the demo page](http://lonekorean.github.io/highlight-within-textarea/)** has some sample styling (view source to see the CSS).
+For reference, **[the demo page](https://lonekorean.github.io/highlight-within-textarea/)** has some sample styling (view source to see the CSS).
 
 There are some guidelines for getting your styles in the right places. Here are the classes you'll want to use.
 
