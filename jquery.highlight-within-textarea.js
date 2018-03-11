@@ -53,18 +53,102 @@
 			return 'other';
 		},
 
+		getHighlightsDivCssFix: function(textareaStyle) {
+			return {
+				'font-size': textareaStyle.getPropertyValue('font-size'),
+				'font-family': textareaStyle.getPropertyValue('font-family'),
+				'font-weight': textareaStyle.getPropertyValue('font-weight'),
+				'line-height': textareaStyle.getPropertyValue('line-height'),
+				'letter-spacing': textareaStyle.getPropertyValue('letter-spacing'),
+				'border': textareaStyle.getPropertyValue('border'),
+				'padding-top': textareaStyle.getPropertyValue('padding-top'),
+				'padding-right': textareaStyle.getPropertyValue('padding-right'),
+				'padding-bottom': textareaStyle.getPropertyValue('padding-bottom'),
+				'padding-left': textareaStyle.getPropertyValue('padding-left'),
+			};
+		},
+
+		getBackdropDivCssFix: function(textareaStyle) {
+			return {
+				'background-color': textareaStyle.getPropertyValue('background-color'),
+				'margin': '0px'
+			};
+		},
+
+		getContainerDivCssFix: function(textareaStyle) {
+			return {
+				'margin-top': textareaStyle.getPropertyValue('margin-top'),
+				'margin-right': textareaStyle.getPropertyValue('margin-right'),
+				'margin-bottom': textareaStyle.getPropertyValue('margin-bottom'),
+				'margin-left': textareaStyle.getPropertyValue('margin-left')
+			};
+		},
+
+		getTextareaCssFix: function(textareaStyle) {
+			// Percent-based width and height will result in different values,
+			// 	so we should fix the computed width and height (unless already set,
+			//	which would later break resizable areas after plugin 'destroy' event)
+			// This value also needs to include the possibility of a scrollbar
+			const cssFix = {};
+			const elementStyle = this.$el.get(0).style;
+			if (!elementStyle.width) {
+				const width = parseInt(textareaStyle.getPropertyValue('width'), 10);
+				const borderLeftWidth = parseInt(textareaStyle.getPropertyValue('border-left-width'), 10);
+				const borderRightWidth = parseInt(textareaStyle.getPropertyValue('border-right-width'), 10);
+				const scrollBarWidth = (this.$el.get(0).offsetWidth -
+					this.$el.get(0).clientWidth - borderLeftWidth - borderRightWidth);
+				cssFix.width = (width + scrollBarWidth) + 'px';
+				this.$el.data('fix-width', true);
+			}
+			if (!elementStyle.height) {
+				const height = parseInt(textareaStyle.getPropertyValue('height'), 10);
+				const borderTopWidth = parseInt(textareaStyle.getPropertyValue('border-top-width'), 10);
+				const borderBottomWidth = parseInt(textareaStyle.getPropertyValue('border-bottom-width'), 10);
+				const scrollBarHeight = (this.$el.get(0).offsetHeight -
+					this.$el.get(0).clientHeight - borderTopWidth - borderBottomWidth);
+				cssFix.height = (height + scrollBarHeight) + 'px';
+				this.$el.data('fix-height', true);
+			}
+			return cssFix;
+		},
+
+		getTextareaCssFixReversed: function() {
+			/* Used to remove the fixed applied width and height properties */
+			const cssFix = {};
+			if (this.$el.data('fix-width')) {
+				cssFix.width = ""; // unset
+				this.$el.removeData('fix-width');
+			}
+			if (this.$el.data('fix-height')) {
+				cssFix.height = ""; // unset
+				this.$el.removeData('fix-height');
+			}
+			return cssFix;
+		},
+
 		generate: function() {
+			// First save styles from existing textarea element
+			const textareaStyle = window.getComputedStyle(this.$el.get(0));
+			const highlightsDivCssFix = this.getHighlightsDivCssFix(textareaStyle);
+			const backdropDivCssFix = this.getBackdropDivCssFix(textareaStyle);
+			const containerDivCssFix = this.getContainerDivCssFix(textareaStyle);
+			const textareaCssFix = this.getTextareaCssFix(textareaStyle);
+
 			this.$el
 				.addClass(ID + '-input ' + ID + '-content')
+				.css(textareaCssFix)
 				.on('input.' + ID, this.handleInput.bind(this))
 				.on('scroll.' + ID, this.handleScroll.bind(this));
 
-			this.$highlights = $('<div>', { class: ID + '-highlights ' + ID + '-content' });
+			this.$highlights = $('<div>', { class: ID + '-highlights ' + ID + '-content' })
+				.css(highlightsDivCssFix);
 
 			this.$backdrop = $('<div>', { class: ID + '-backdrop' })
+				.css(backdropDivCssFix)
 				.append(this.$highlights);
 
 			this.$container = $('<div>', { class: ID + '-container' })
+				.css(containerDivCssFix)
 				.insertAfter(this.$el)
 				.append(this.$backdrop, this.$el) // moves $el into $container
 				.on('scroll', this.blockContainerScroll.bind(this));
@@ -337,9 +421,11 @@
 
 		destroy: function() {
 			this.$backdrop.remove();
+			const textareaCssFixReversed = this.getTextareaCssFixReversed();
 			this.$el
 				.unwrap()
-				.removeClass(ID + '-text ' + ID + '-input')
+				.removeClass(ID + '-content ' + ID + '-input')
+				.css(textareaCssFixReversed)
 				.off(ID)
 				.removeData(ID);
 		},
