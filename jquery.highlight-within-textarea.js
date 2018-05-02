@@ -185,7 +185,36 @@
 			return this.getRanges(input, func(input));
 		},
 
+		getRegExpRangesWithNonCapturingGroups: function(input, regex) {
+			let ranges = [];
+			let match;
+			let capturedGroups;
+			let beginIndex, endIndex;
+			while (match = regex.exec(input), match !== null) {
+				beginIndex = match.index;
+				endIndex = match.index + match[0].length;
+				capturedGroups = '';
+				for (let i = 1; i < match.length; i++) {
+					capturedGroups += match[i];
+				}
+				if (capturedGroups !== '') {
+					beginIndex = match.index + match[0].search(capturedGroups);
+					endIndex = beginIndex + capturedGroups.length;
+				}
+				ranges.push([beginIndex, endIndex]);
+				if (!regex.global) {
+					// non-global regexes do not increase lastIndex, causing an infinite loop,
+					// but we can just break manually after the first match
+					break;
+				}
+			}
+			return ranges;
+		},
+
 		getRegExpRanges: function(input, regex) {
+			if (/.*\(\?:.*\).*/.test(regex)) {
+				return this.getRegExpRangesWithNonCapturingGroups(input, regex);
+			}
 			let ranges = [];
 			let match;
 			while (match = regex.exec(input), match !== null) {

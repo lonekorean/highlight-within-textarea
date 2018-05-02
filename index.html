@@ -126,6 +126,17 @@ $('.regex-example').highlightWithinTextarea({
 		</section>
 
 		<section>
+			<h2>RegExp With Non-Capturing Groups</h2>
+			<p>If you want to use <code>(?:)</code> (non-capturing groups), use grouping <code>()</code> for all of the other parts.</p>
+			<textarea class="regex-non-capturing-example">This a sentence. After the sentence, there is this sentence.</textarea>
+			<script>
+$('.regex-non-capturing-example').highlightWithinTextarea({
+    highlight: /(?:\. )(After the sentence)/
+});
+			</script>
+		</section>
+
+		<section>
 			<h2>Array of Two Numbers (Range)</h2>
 			<p>An array of exactly two numbers is treated as a range. Highlighting starts at the first character index (inclusive) and ends at the second character index (exclusive).</p>
 			<textarea class="range-example">abcdefgh</textarea>
