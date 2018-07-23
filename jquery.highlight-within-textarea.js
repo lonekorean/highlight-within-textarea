@@ -335,8 +335,6 @@
 			$('> mark', this.$highlights).each(function(index, mark) {
 				var boundary = boundaries[+mark.getAttribute('data-boundary-index')]
 
-				console.log(boundary)
-
 				if (boundary.callback) {
 					boundary.callback(mark, index, boundary.match, boundary.index)
 				}
