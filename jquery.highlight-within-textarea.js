@@ -332,7 +332,7 @@
 
 			this.$highlights.html(input);
 
-			$('> mark', this.$highlights).each(function(index, mark) {
+			$('mark', this.$highlights).each(function(index, mark) {
 				var boundary = boundaries[+mark.getAttribute('data-boundary-index')]
 
 				if (boundary.callback) {
