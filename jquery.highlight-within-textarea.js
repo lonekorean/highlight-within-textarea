@@ -189,7 +189,7 @@
 			let ranges = [];
 			let match;
 			while (match = regex.exec(input), match !== null) {
-				ranges.push([match.index, match.index + match[0].length]);
+				ranges[ranges.push([match.index, match.index + match[0].length]) - 1].match = match;
 				if (!regex.global) {
 					// non-global regexes do not increase lastIndex, causing an infinite loop,
 					// but we can just break manually after the first match
@@ -227,6 +227,19 @@
 					}
 				});
 			}
+			if (custom.callback) {
+				ranges.forEach(function(range) {
+					// call all handlers
+					if (range.callback) {
+						range.callback = function() {
+							range.callback(arguments);
+							custom.callback(arguments);
+						};
+					} else {
+						range.callback = custom.callback;
+					}
+				});
+			}
 			return ranges;
 		},
 
@@ -252,7 +265,9 @@
 				boundaries.push({
 					type: 'start',
 					index: range[0],
-					className: range.className
+					className: range.className,
+					callback: range.callback,
+					match: range.match
 				});
 				boundaries.push({
 					type: 'stop',
@@ -292,10 +307,10 @@
 			});
 
 			// this keeps scrolling aligned when input ends with a newline
-			input = input.replace(/\n(\{\{hwt-mark-stop\}\})?$/, '\n\n$1');
+			input = input.replace(/\n({{hwt-mark-stop}})?$/, '\n\n$1');
 
 			// encode HTML entities
-			input = input.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+			input = input.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 			if (this.browser === 'ie') {
 				// IE/Edge wraps whitespace differently in a div vs textarea, this fixes it
@@ -303,19 +318,27 @@
 			}
 
 			// replace start tokens with opening <mark> tags with class name
-			input = input.replace(/\{\{hwt-mark-start\|(\d+)\}\}/g, function(match, submatch) {
+			input = input.replace(/{{hwt-mark-start\|(\d+)}}/g, function(match, submatch) {
 				var className = boundaries[+submatch].className;
 				if (className) {
-					return '<mark class="' + className + '">';
+					return '<mark class="' + className + '" data-boundary-index=' + submatch + '>';
 				} else {
-					return '<mark>';
+					return '<mark data-boundary-index=' + submatch + '>';
 				}
 			});
 
 			// replace stop tokens with closing </mark> tags
-			input = input.replace(/\{\{hwt-mark-stop\}\}/g, '</mark>');
+			input = input.replace(/{{hwt-mark-stop}}/g, '</mark>');
 
 			this.$highlights.html(input);
+
+			$('mark', this.$highlights).each(function(index, mark) {
+				var boundary = boundaries[+mark.getAttribute('data-boundary-index')]
+
+				if (boundary.callback) {
+					boundary.callback(mark, index, boundary.match, boundary.index)
+				}
+			})
 		},
 
 		handleScroll: function() {

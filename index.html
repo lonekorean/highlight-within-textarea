@@ -178,21 +178,46 @@ $('.function-example').highlightWithinTextarea({
 			<p>Any type mentioned here can be put in an object wrapper with <code>highlight</code> and <code>className</code> properties. This lets you set CSS classes in the highlight markup for custom styling, such as changing the highlight color.</p>
 			<textarea class="class-example">Here's a blueberry. There's a strawberry. Surprise, it's a banananana!</textarea>
 			<script>
-$('.class-example').highlightWithinTextarea({
-    highlight: [
-        {
-            highlight: 'strawberry',
-            className: 'red'
-        },
-        {
-            highlight: 'blueberry',
-            className: 'blue'
-        },
-        {
-            highlight: /ba(na)*/gi,
-            className: 'yellow'
-        }
-    ]
+				$('.class-example').highlightWithinTextarea({
+					highlight: [
+						{
+							highlight: 'strawberry',
+							className: 'red'
+						},
+						{
+							highlight: 'blueberry',
+							className: 'blue'
+						},
+						{
+							highlight: /ba(na)*/gi,
+							className: 'yellow'
+						}
+					]
+				});
+			</script>
+		</section>
+
+		<section>
+			<h2>Custom Callback</h2>
+			<p>By providing a custom callback, you can execute a function on all created <code>mark</code> elements. Observe:</p>
+			<textarea class="callback-example">Here's an example that matches CSS hex color codes. #ff0000. #00c2ff.</textarea>
+			<script>
+$('.callback-example').highlightWithinTextarea({
+	highlight: [
+		{
+			highlight: /(?!\b)#([0-9a-f]{6}|[0-9a-f]{3})\b/gi, // matches CSS hex colors in the form of #rgb or #rrggbb
+			callback: function(mark, index, match, markPosition) {
+				// `mark` is the mark element
+				// `index` is the index of the element
+				// `match` is the regex match, if any
+				// `markPosition` is the position of the start of the mark
+
+				console.log('mark: %o, index: %d, match: %O, mark position: %d', mark, index, match, markPosition)
+
+				mark.style.backgroundColor = mark.innerHTML
+			}
+		}
+	]
 });
 			</script>
 		</section>
