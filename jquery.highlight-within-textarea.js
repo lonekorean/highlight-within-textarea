@@ -227,6 +227,16 @@
 					}
 				});
 			}
+			if (custom.style) {
+				ranges.forEach(function(range) {
+					// persist class name as a property of the array
+					if (range.style) {
+						range.style = custom.style + ' ' + range.style;
+					} else {
+						range.style = custom.style;
+					}
+				});
+			}
 			return ranges;
 		},
 
@@ -252,7 +262,8 @@
 				boundaries.push({
 					type: 'start',
 					index: range[0],
-					className: range.className
+					className: range.className,
+					style: range.style
 				});
 				boundaries.push({
 					type: 'stop',
@@ -304,9 +315,13 @@
 
 			// replace start tokens with opening <mark> tags with class name
 			input = input.replace(/\{\{hwt-mark-start\|(\d+)\}\}/g, function(match, submatch) {
-				var className = boundaries[+submatch].className;
-				if (className) {
-					return '<mark class="' + className + '">';
+				let attrs = []
+        var className = boundaries[+submatch].className;
+				if (className) attrs.push( 'class="' + className + '"');
+				var style = boundaries[+submatch].style;
+				if (style) attrs.push( 'style="' + style + '"');
+        if (attrs.length > 0) {
+					return '<mark '+ attrs.join(' ') +'>';
 				} else {
 					return '<mark>';
 				}
